@@ -52,6 +52,7 @@ class camPatrouille extends eqLogic {
     $user = config::byKey('username', __CLASS__); 
     $pswd = config::byKey('password', __CLASS__); 
     $port = config::byKey('port', __CLASS__); 
+    $port = config::byKey('ip', __CLASS__); 
     if ($user == '') {
         $return['launchable'] = 'nok';
         $return['launchable_message'] = __('Le nom d\'utilisateur n\'est pas configuré', __FILE__);
@@ -61,6 +62,9 @@ class camPatrouille extends eqLogic {
     } elseif ($port == '') {
         $return['launchable'] = 'nok';
         $return['launchable_message'] = __('Le port n\'est pas configuré', __FILE__);
+    }  elseif ($ip == '') {
+        $return['launchable'] = 'nok';
+        $return['launchable_message'] = __('L\'ip n\'est pas configurée', __FILE__);
     }    
     return $return;
 }
