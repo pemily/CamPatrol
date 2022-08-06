@@ -35,32 +35,6 @@ class camPatrouille extends eqLogic {
 
   /*     * ***********************Methode static*************************** */
 
-
-  // https://doc.jeedom.com/fr_FR/dev/daemon_plugin#Installation%20des%20d%C3%A9pendances
-  public static function dependancy_install() {
-    log::remove(__CLASS__ . '_update');    
-    return array(
-      'script' => dirname(__FILE__) . '/../../resources/install_apt.sh ' . jeedom::getTmpFolder(__CLASS__) . '/dependency_progress',
-      'log' => log::getPathToLog(__CLASS__ . '_update')
-    );
-  }
-  
-  
-	public static function dependancy_info() {
-    log::add(__CLASS__, 'info', 'dependancy_info');    
-		$return = array();
-		$return['log'] = log::getPathToLog(__CLASS__ . '_update');
-		$return['progress_file'] = jeedom::getTmpFolder(__CLASS__) . '/dependency_progress';
-		$return['state'] = 'ok';
-		if (exec('which npm | wc -l') == 0) {
-			$return['state'] = 'nok';
-		}
-		if (exec('which node | wc -l') == 0 && exec('which nodejs | wc -l') == 0) {
-			$return['state'] = 'nok';
-		}
-		return $return;
-	}
-
   public static function deamon_info() {
     // log::add(__CLASS__, 'info', 'deamon_info'); // méthode appellé toutes les 5 secondes par jeedom
     $return = array();

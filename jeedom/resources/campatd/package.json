@@ -1,5 +1,5 @@
 {
-  "name": "camPatrouille-ftpServer",
+  "name": "cam_patrouille_server",
   "version": "1.0.0",
   "description": "To detect camera alert",
   "private": true,
