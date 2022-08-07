@@ -35,12 +35,11 @@ class camPatrouille extends eqLogic {
 
   /*     * ***********************Methode static*************************** */
 
-  public static function deamon_info() {
-    // log::add(__CLASS__, 'info', 'deamon_info'); // méthode appellé toutes les 5 secondes par jeedom
+  public static function deamon_info() {    
     $return = array();
     $return['log'] = __CLASS__;
     $return['state'] = 'nok';
-    $pid_file = jeedom::getTmpFolder(__CLASS__) . '/camPatrouille.pid';
+    $pid_file = jeedom::getTmpFolder(__CLASS__) . '/daemon.pid';
     if (file_exists($pid_file)) {
         if (@posix_getsid(trim(file_get_contents($pid_file)))) {
             $return['state'] = 'ok';
@@ -49,10 +48,10 @@ class camPatrouille extends eqLogic {
         }
     }
     $return['launchable'] = 'ok';
-    $user = config::byKey('username', __CLASS__); 
-    $pswd = config::byKey('password', __CLASS__); 
-    $port = config::byKey('port', __CLASS__); 
-    $port = config::byKey('ip', __CLASS__); 
+    $user = config::byKey('server_username', __CLASS__); 
+    $pswd = config::byKey('server_password', __CLASS__); 
+    $port = config::byKey('server_port', __CLASS__); 
+    $ip = config::byKey('server_ip', __CLASS__); 
     if ($user == '') {
         $return['launchable'] = 'nok';
         $return['launchable_message'] = __('Le nom d\'utilisateur n\'est pas configuré', __FILE__);
@@ -68,6 +67,42 @@ class camPatrouille extends eqLogic {
     }    
     return $return;
 }
+
+
+public static function deamon_start($_debug = false) {
+  self::deamon_stop();
+  log::add(__CLASS__, 'info', 'start : ');
+  $deamon_info = self::deamon_info();
+  if ($deamon_info['launchable'] != 'ok') {
+    throw new Exception(__('Veuillez vérifier la configuration', __FILE__));
+  }
+
+  $cmd = 'sudo node ' . __DIR__ . '/../../resources/campatd/server.js';
+  $cmd .= ' --port=21';
+  $cmd .= ' --user=user';
+  $cmd .= ' --pwd=pass';
+  $cmd .= ' --alertUrl=http://www.google.com';
+  $cmd .= ' --pid=' . jeedom::getTmpFolder(__CLASS__) . '/daemon.pid';
+  $cmd .= ' --loglevel=' . log::convertLogLevel(log::getLogLevel(__CLASS__));
+  $cmd .= ' >> ' . log::getPathToLog(__CLASS__) . ' 2>&1 &';
+  log::add(__CLASS__, 'info', 'Lancement : ' . $cmd);
+  exec($cmd);
+  log::add(__CLASS__, 'info', 'Démon CamPatrouille lancé');
+  sleep(5);
+}
+
+public static function deamon_stop() {
+  log::add(__CLASS__, 'info', 'stop : ');
+  $deamon_info = self::deamon_info();
+  $pid_file = jeedom::getTmpFolder(__CLASS__) . '/daemon.pid';
+  log::add(__CLASS__, 'info', 'stop : '.$pid_file);
+  if (file_exists($pid_file)) {
+    $pid = intval(trim(file_get_contents($pid_file)));
+    system::kill($pid);
+  }
+  sleep(2);
+}
+
 
   /*
   * Fonction exécutée automatiquement toutes les minutes par Jeedom

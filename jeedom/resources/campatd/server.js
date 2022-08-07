@@ -4,8 +4,8 @@
 import { FtpSrv, FileSystem } from "ftp-srv";
 import { readableNoopStream, writableNoopStream} from "noop-stream";
 import { request } from 'http';
+import { writeFile } from 'fs';
 import argsParser from 'args-parser';
-import { exit } from "process";
 import dns from "dns";
 
 
@@ -14,8 +14,8 @@ const args = argsParser(process.argv);
 const port=args.ftpPort;
 
 function usage(){
-    console.log("node src/index.js --port=8090 --user=patrouilleur --pwd=patrouilleur -alertUrl=http://www.google.com");    
-    exit(1);
+    console.log("node server.js --pid=/tmp/campat.pid --port=8090 --user=patrouilleur --pwd=patrouilleur -alertUrl=http://www.google.com");    
+    process.exit(1);
 }
 
 if (args.port === undefined){
@@ -34,6 +34,18 @@ if (args.alertUrl === undefined){
     console.error("alertUrl argument is missing");
     usage();
 }
+if (args.pid === undefined){
+    console.error("pid argument is missing");
+    usage();
+}
+
+writeFile(args.pid, process.pid.toString(), function(err) {
+    if(err) {
+        console.error("Impossible to write pid file");
+        process.exit(2)
+    }
+});
+
 
 console.log("Port: "+args.port+" user: "+args.user+" "+" alertUrl: "+args.alertUrl);
 
