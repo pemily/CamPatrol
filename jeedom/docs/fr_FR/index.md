@@ -1,6 +1,6 @@
-# Plugin template
+# Plugin CamPatrouille
 
-Ce "template de plugin" sert de base à la réalisation de plugins pour **Jeedom**.
+TODO Ce "template de plugin" sert de base à la réalisation de plugins pour **Jeedom**.
 
 La documentation générale relative à la conception de plugin est consultable [ici](https://doc.jeedom.com/fr_FR/dev/).
 

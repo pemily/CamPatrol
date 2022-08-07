@@ -16,6 +16,10 @@
 
 const request = require('request');
 var express = require('express');
+//import request from 'request';
+// import express from "express";
+
+
 
 var Jeedom = {}
 Jeedom.log = {}

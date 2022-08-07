@@ -1,54 +1,57 @@
-import { FtpSrv, FileSystem } from "ftp-srv"; // https://github.com/QuorumDMS/ftp-srv
-import { readableNoopStream, writableNoopStream} from "noop-stream";
+import { FtpSrv, FileSystem } from 'ftp-srv'; // https://github.com/QuorumDMS/ftp-srv
+import { readableNoopStream, writableNoopStream} from 'noop-stream';
 import { request } from 'http';
-import { writeFile } from 'fs';
 import argsParser from 'args-parser';
-import dns from "dns";
-
-
+import dns from 'dns';
+// var jeedom = import('./jeedom.js');
+// import * as jeedom  from './jeedom/index.cjs';
+// import { write_pid } from './jeedom.mjs';
+import { log_setLevel, log_debug, log_info, log_error, write_pid } from './jeedom.mjs';
 
 const args = argsParser(process.argv);
-const port=args.ftpPort;
+
 
 function usage(){
-    console.log("node server.js --pid=/tmp/campat.pid --port=8090 --user=patrouilleur --pwd=patrouilleur --ip=0.0.0.0 -alertUrl=http://www.google.com");    
+    log_info("node server.js --pidFile=/tmp/campat.pid --port=8090 --user=patrouilleur --pwd=patrouilleur --ip=0.0.0.0 --logLevel=debug --alertUrl=http://www.google.com");    
     process.exit(1);
 }
 
 if (args.port === undefined){
-    console.error("port argument is missing");    
+    log_error("port argument is missing");    
     usage();
 }
 if (args.user === undefined){
-    console.error("user argument is missing");
+    log_error("user argument is missing");
     usage();
 }
 if (args.pwd === undefined){
-    console.error("pwd argument is missing");
+    log_error("pwd argument is missing");
     usage();
 }
 if (args.ip === undefined){
-    console.error("ip argument is missing");
+    log_error("ip argument is missing");
     usage();
 }
 if (args.alertUrl === undefined){
-    console.error("alertUrl argument is missing");
+    log_error("alertUrl argument is missing");
     usage();
 }
-if (args.pid === undefined){
-    console.error("pid argument is missing");
+if (args.pidFile === undefined){
+    log_error("pidFile argument is missing");
     usage();
 }
+if (args.logLevel === undefined){
+    log_error("logLevel argument is missing");
+    usage();
+}
+else {
+    log_setLevel(args.logLevel);
+}
 
-writeFile(args.pid, process.pid.toString(), function(err) {
-    if(err) {
-        console.error("Impossible to write pid file");
-        process.exit(2)
-    }
-});
+write_pid(args.pidFile);
 
 
-console.log("Port: "+args.port+" user: "+args.user+" "+" alertUrl: "+args.alertUrl);
+log_debug("Server config port: "+args.port+" user: "+args.user+" "+" alertUrl: "+args.alertUrl);
 
 const ftpServer = new FtpSrv({
     url: "ftp://"+ args.ip + ":" + args.port,    
@@ -66,7 +69,7 @@ ftpServer.on('login', (data, resolve, reject) => {
     }
      
     if(data.username === args.user && data.password === args.pwd){
-        console.log("FTP Virtual FileSystem");
+        log_info("Connection successful ");
         return resolve({ fs: new MyAlerterFileSystem(ip)});
     }
     return reject({
@@ -77,13 +80,13 @@ ftpServer.on('login', (data, resolve, reject) => {
 
 ftpServer.on ( 'client-error', (connection, context, error) =>
 {
-  console.log ( 'connection: ' +  connection );
-  console.log ( 'context: '    +  context );
-  console.log ( 'error: '      +  error );
+  log_error ( 'connection: ' +  connection );
+  log_error ( 'context: '    +  context );
+  log_error ( 'error: '      +  error );
 });
 
 ftpServer.listen().then(() => {
-    console.log('Ftp server is started')
+    log_info('CamPatrouille server is started')
 });
 
 
@@ -123,11 +126,11 @@ class MyAlerterFileSystem extends FileSystem{
             if (hostname === undefined || hostname === ""){
                 hostname = "";
             }
-            console.log("Alert from ip="+this.clientIP+" hostname="+hostname);
+            log_info("Alert from ip="+this.clientIP+" hostname="+hostname);
 
             request(args.alertUrl+"?ip="+this.clientIP+"&hostname="+hostname, { }, (res) => {
                 const { statusCode } = res;
-                console.log("Alert send http result: "+statusCode);
+                log_error("Alert send http result: "+statusCode);
             }).end();                        
         });
         
@@ -153,7 +156,6 @@ class MyAlerterFileSystem extends FileSystem{
     getUniqueName(){        
         return "tmp";
     }
-
-   
-  }
+  
+}
  

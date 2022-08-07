@@ -51,7 +51,7 @@ class camPatrouille extends eqLogic {
     $user = config::byKey('server_username', __CLASS__); 
     $pswd = config::byKey('server_password', __CLASS__); 
     $port = config::byKey('server_port', __CLASS__); 
-    $ip = config::byKey('server_ip', __CLASS__); 
+    $ip = config::byKey('server_ip', __CLASS__);     
     if ($user == '') {
         $return['launchable'] = 'nok';
         $return['launchable_message'] = __('Le nom d\'utilisateur n\'est pas configuré', __FILE__);
@@ -90,8 +90,8 @@ public static function deamon_start($_debug = false) {
   $cmd .= ' --pwd=' . $pswd;
   $cmd .= ' --ip=' . $ip;
   $cmd .= ' --alertUrl=http://www.google.com';
-  $cmd .= ' --pid=' . jeedom::getTmpFolder(__CLASS__) . '/daemon.pid';
-  $cmd .= ' --loglevel=' . log::convertLogLevel(log::getLogLevel(__CLASS__));  
+  $cmd .= ' --pidFile=' . jeedom::getTmpFolder(__CLASS__) . '/daemon.pid';
+  $cmd .= ' --logLevel=' . log::convertLogLevel(log::getLogLevel(__CLASS__));  
   $cmd .= ' --log=' . (__CLASS__);
   log::add(__CLASS__, 'debug', 'Cmd Launched: ' . $cmd);
 
@@ -219,7 +219,7 @@ public static function deamon_stop() {
 
 }
 
-class templateCmd extends cmd {
+class camPatrouilleCmd extends cmd {
   /*     * *************************Attributs****************************** */
 
   /*
