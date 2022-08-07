@@ -15,6 +15,7 @@
 */
 
 import fs from 'fs';
+import http from 'http';
 
 var Jeedom = {}
 Jeedom.log = {}
@@ -56,4 +57,34 @@ export function log_error(_log){
     return;
   }
   console.log('['+(new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''))+'][ERROR] : '+_log)
+}
+
+/***************************COM*******************************/
+
+const URL_JEEDOM="http://localhost/core/api/jeeApi.php";
+
+export function send_change_immediate(payload){
+  log_debug('Send data to jeedom : '+JSON.stringify(payload));
+  
+  const req = http.request(
+    URL_JEEDOM,
+    {
+     method: 'POST'
+    },
+    (res) => {
+     res.resume();
+     res.on('end', () => {
+       if (!res.complete)
+         console.error(
+           'The connection was terminated while the message was still being sent');
+     });
+   });
+   req.write(JSON.stringify(payload));
+   req.end();
+   /*
+  request.post(URL_JEEDOM+'?apikey='+apiKey, {json: payload}, function(error, response, body){
+    if(response.statusCode != 200){
+      log_error('Error on send to jeedom : '+JSON.stringify(error));
+    }
+  }); */
 }

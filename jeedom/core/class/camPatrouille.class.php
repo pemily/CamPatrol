@@ -73,23 +73,27 @@ class camPatrouille extends eqLogic {
 public static function deamon_start($_debug = false) {
   self::deamon_stop();
   log::add(__CLASS__, 'info', 'start server');
+
   $deamon_info = self::deamon_info();
   if ($deamon_info['launchable'] != 'ok') {
     throw new Exception(__('Veuillez vérifier la configuration', __FILE__));
   }
-  
+
+  // ici je devrais mettre jeedom::getApiKey(); ou config::byKey('api', __CLASS__); 
+  // pour ne récuperer que la clé du plugin et pas la clé générale, mais ca ne marche pas avec la clé du plugin :( 
+  // j'ai un "vous n'avez pas les droits" 
+  $apiKey = config::byKey('api', 'core');  
   $user = config::byKey('server_username', __CLASS__); 
   $pswd = config::byKey('server_password', __CLASS__); 
   $port = config::byKey('server_port', __CLASS__); 
-  $ip = config::byKey('server_ip', __CLASS__); 
-
+  $ip = config::byKey('server_ip', __CLASS__);  
 
   $cmd = 'sudo node ' . __DIR__ . '/../../resources/campatd/server.js';
   $cmd .= ' --port=' . $port;
   $cmd .= ' --user=' . $user;
   $cmd .= ' --pwd=' . $pswd;
   $cmd .= ' --ip=' . $ip;
-  $cmd .= ' --alertUrl=http://www.google.com';
+  $cmd .= ' --apikey=' . $apiKey;  
   $cmd .= ' --pidFile=' . jeedom::getTmpFolder(__CLASS__) . '/daemon.pid';
   $cmd .= ' --logLevel=' . log::convertLogLevel(log::getLogLevel(__CLASS__));  
   $cmd .= ' --log=' . (__CLASS__);

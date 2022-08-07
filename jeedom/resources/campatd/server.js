@@ -3,16 +3,12 @@ import { readableNoopStream, writableNoopStream} from 'noop-stream';
 import { request } from 'http';
 import argsParser from 'args-parser';
 import dns from 'dns';
-// var jeedom = import('./jeedom.js');
-// import * as jeedom  from './jeedom/index.cjs';
-// import { write_pid } from './jeedom.mjs';
-import { log_setLevel, log_debug, log_info, log_error, write_pid } from './jeedom.mjs';
+import { log_setLevel, log_debug, log_info, log_error, write_pid, send_change_immediate } from './jeedom.mjs';
 
 const args = argsParser(process.argv);
 
-
 function usage(){
-    log_info("node server.js --pidFile=/tmp/campat.pid --port=8090 --user=patrouilleur --pwd=patrouilleur --ip=0.0.0.0 --logLevel=debug --alertUrl=http://www.google.com");    
+    log_info("node server.js --pidFile=/tmp/campat.pid --port=8090 --user=patrouilleur --pwd=patrouilleur --apikey=XXXXXXX --ip=0.0.0.0 --logLevel=debug");    
     process.exit(1);
 }
 
@@ -32,12 +28,12 @@ if (args.ip === undefined){
     log_error("ip argument is missing");
     usage();
 }
-if (args.alertUrl === undefined){
-    log_error("alertUrl argument is missing");
-    usage();
-}
 if (args.pidFile === undefined){
     log_error("pidFile argument is missing");
+    usage();
+}
+if (args.apikey === undefined){
+    log_error("apikey argument is missing");
     usage();
 }
 if (args.logLevel === undefined){
@@ -50,8 +46,18 @@ else {
 
 write_pid(args.pidFile);
 
+//https://doc.jeedom.com/fr_FR/core/4.1/jsonrpc_api
+send_change_immediate({
+    "jsonrpc": "2.0",    
+    "method": "eqLogic::save",
+    "params": {
+        "apikey": args.apikey,
+        "eqType_name": "camPatrouille",
+        "name": "MonSuperEtDernierEquipement"
+    }
+});
 
-log_debug("Server config port: "+args.port+" user: "+args.user+" "+" alertUrl: "+args.alertUrl);
+log_debug("Server config port: "+args.port+" user: "+args.user);
 
 const ftpServer = new FtpSrv({
     url: "ftp://"+ args.ip + ":" + args.port,    
