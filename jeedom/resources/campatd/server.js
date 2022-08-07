@@ -1,7 +1,4 @@
-
-
-// https://github.com/QuorumDMS/ftp-srv
-import { FtpSrv, FileSystem } from "ftp-srv";
+import { FtpSrv, FileSystem } from "ftp-srv"; // https://github.com/QuorumDMS/ftp-srv
 import { readableNoopStream, writableNoopStream} from "noop-stream";
 import { request } from 'http';
 import { writeFile } from 'fs';
@@ -53,7 +50,7 @@ const ftpServer = new FtpSrv({
     url: "ftp://0.0.0.0:" + args.port,    
     anonymous:false,
     tls: false,
-    greeting : [ "Welcome to FTPSrv-Alerter" ]
+    greeting : [ "Welcome to CamPatrouille" ]
 });
 
 ftpServer.on('login', (data, resolve, reject) => {
@@ -82,7 +79,7 @@ ftpServer.on ( 'client-error', (connection, context, error) =>
 });
 
 ftpServer.listen().then(() => {
-    console.log('Ftp server is starting...')
+    console.log('Ftp server is started')
 });
 
 
