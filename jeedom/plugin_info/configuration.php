@@ -29,7 +29,7 @@ if (!isConnect()) {
         <sup><i class="fas fa-question-circle tooltips" title="{{The username of your choice}}"></i></sup>
       </label>
       <div class="col-md-4">
-        <input class="configKey form-control" data-l1key="username" placeholder="campat"/>
+        <input class="configKey form-control" data-l1key="server_username" placeholder="campat"/>
       </div>
     </div>
     <div class="form-group">
@@ -37,23 +37,23 @@ if (!isConnect()) {
         <sup><i class="fas fa-question-circle tooltips" title="{{The password of your choice}}"></i></sup>
       </label>
       <div class="col-md-4">
-        <input class="configKey form-control" data-l1key="password" placeholder="campat"/>
+        <input class="configKey form-control" data-l1key="server_password" placeholder="campat"/>
       </div>
     </div>
     <div class="form-group">
       <label class="col-md-4 control-label">{{FTP Port :}}
-        <sup><i class="fas fa-question-circle tooltips" title="{{The ftp port of your choice}}"></i></sup>
+        <sup><i class="fas fa-question-circle tooltips" title="{{The ftp server port of your choice}}"></i></sup>
       </label>
       <div class="col-md-4">
-        <input class="configKey form-control" data-l1key="port" placeholder="21"/>
+        <input class="configKey form-control" data-l1key="server_port" placeholder="21"/>
       </div>
     </div>
     <div class="form-group">
       <label class="col-md-4 control-label">{{FTP IP :}}
-        <sup><i class="fas fa-question-circle tooltips" title="{{The ftp ip. Update it only in case of ftp server start problem.}}"></i></sup>
+        <sup><i class="fas fa-question-circle tooltips" title="{{The ftp server ip. Update it only in case of network problem.}}"></i></sup>
       </label>
       <div class="col-md-4">
-        <input class="configKey form-control" data-l1key="ip" placeholder="0.0.0.0" />
+        <input class="configKey form-control" data-l1key="server_ip" placeholder="0.0.0.0" />
       </div>
     </div>    
   </fieldset>
