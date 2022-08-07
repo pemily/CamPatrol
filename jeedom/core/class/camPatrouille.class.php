@@ -77,11 +77,18 @@ public static function deamon_start($_debug = false) {
   if ($deamon_info['launchable'] != 'ok') {
     throw new Exception(__('Veuillez vérifier la configuration', __FILE__));
   }
+  
+  $user = config::byKey('server_username', __CLASS__); 
+  $pswd = config::byKey('server_password', __CLASS__); 
+  $port = config::byKey('server_port', __CLASS__); 
+  $ip = config::byKey('server_ip', __CLASS__); 
+
 
   $cmd = 'sudo node ' . __DIR__ . '/../../resources/campatd/server.js';
-  $cmd .= ' --port=21';
-  $cmd .= ' --user=user';
-  $cmd .= ' --pwd=pass';
+  $cmd .= ' --port=' . $port;
+  $cmd .= ' --user=' . $user;
+  $cmd .= ' --pwd=' . $pswd;
+  $cmd .= ' --ip=' . $ip;
   $cmd .= ' --alertUrl=http://www.google.com';
   $cmd .= ' --pid=' . jeedom::getTmpFolder(__CLASS__) . '/daemon.pid';
   $cmd .= ' --loglevel=' . log::convertLogLevel(log::getLogLevel(__CLASS__));  

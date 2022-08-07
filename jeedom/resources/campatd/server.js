@@ -11,7 +11,7 @@ const args = argsParser(process.argv);
 const port=args.ftpPort;
 
 function usage(){
-    console.log("node server.js --pid=/tmp/campat.pid --port=8090 --user=patrouilleur --pwd=patrouilleur -alertUrl=http://www.google.com");    
+    console.log("node server.js --pid=/tmp/campat.pid --port=8090 --user=patrouilleur --pwd=patrouilleur --ip=0.0.0.0 -alertUrl=http://www.google.com");    
     process.exit(1);
 }
 
@@ -25,6 +25,10 @@ if (args.user === undefined){
 }
 if (args.pwd === undefined){
     console.error("pwd argument is missing");
+    usage();
+}
+if (args.ip === undefined){
+    console.error("ip argument is missing");
     usage();
 }
 if (args.alertUrl === undefined){
@@ -47,7 +51,7 @@ writeFile(args.pid, process.pid.toString(), function(err) {
 console.log("Port: "+args.port+" user: "+args.user+" "+" alertUrl: "+args.alertUrl);
 
 const ftpServer = new FtpSrv({
-    url: "ftp://0.0.0.0:" + args.port,    
+    url: "ftp://"+ args.ip + ":" + args.port,    
     anonymous:false,
     tls: false,
     greeting : [ "Welcome to CamPatrouille" ]
