@@ -33,36 +33,41 @@ export function write_pid(_file){
 
 /***************************LOGS*******************************/
 
-export function log_setLevel(_level){
-  var convert = {debug  : 0,info : 10,notice : 20,warning : 30,error : 40,critical : 50,none : 60}
-  Jeedom.log.level = convert[_level]
-}
 
-export function log_debug(_log){
-  if(Jeedom.log.level > 0){
-    return;
-  }
-  console.log('['+(new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''))+'][DEBUG] : '+_log)
-}
+export class JeedomLog {    
 
-export function log_info(_log){
-  if(Jeedom.log.level > 10){
-    return;
+  constructor(_logOuputFile, _level){      
+      this.logFile = _logOuputFile;   
+      var convert = {debug  : 0,info : 10,notice : 20,warning : 30,error : 40,critical : 50,none : 60}
+      this.level = convert[_level]    
   }
-  console.log('['+(new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''))+'][INFO] : '+_log)
-}
 
-export function log_error(_log){
-  if(Jeedom.log.level > 40){
-    return;
+  debug(_log){
+    if(this.level > 0){
+      return;
+    }
+    fs.appendFileSync(this.logFile, '['+(new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''))+'][DEBUG] : '+_log+'\r\n');
   }
-  console.log('['+(new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''))+'][ERROR] : '+_log)
+
+  info(_log){
+    if(this.level > 10){
+      return;
+    }
+    fs.appendFileSync(this.logFile, '['+(new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''))+'][INFO] : '+_log+'\r\n')
+  }
+
+  error(_log){
+    if(this.level > 40){
+      return;
+    }
+    fs.appendFileSync(this.logFile, '['+(new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''))+'][ERROR] : '+_log+'\r\n')
+  }
 }
 
 /***************************COM*******************************/
 
 const URL_JEEDOM="http://localhost/core/api/jeeApi.php";
-
+/*
 export function send_change_immediate(payload){
   log_debug('Send data to jeedom : '+JSON.stringify(payload));
   
@@ -81,10 +86,24 @@ export function send_change_immediate(payload){
    });
    req.write(JSON.stringify(payload));
    req.end();
-   /*
-  request.post(URL_JEEDOM+'?apikey='+apiKey, {json: payload}, function(error, response, body){
-    if(response.statusCode != 200){
-      log_error('Error on send to jeedom : '+JSON.stringify(error));
-    }
-  }); */
+}
+*/
+
+export function executeApiCmd(payload){ 
+  return new Promise((resolve, reject) => {
+    const req = http.request(
+      URL_JEEDOM,
+      { method: 'POST' },
+      (response) => {
+       let data = '';
+       response.on('data', chunk => data += chunk); // consume the response body in data
+       response.once('end', () => { resolve(data); });       
+     });
+     req.once('error', err => {
+        console.error("Error in Request ", (err.message || err));
+        reject(err);
+     });
+     req.write(JSON.stringify(payload));
+     req.end();  
+  });
 }

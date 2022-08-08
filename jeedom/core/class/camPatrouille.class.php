@@ -79,10 +79,9 @@ public static function deamon_start($_debug = false) {
     throw new Exception(__('Veuillez vérifier la configuration', __FILE__));
   }
 
-  // ici je devrais mettre jeedom::getApiKey(); ou config::byKey('api', __CLASS__); 
-  // pour ne récuperer que la clé du plugin et pas la clé générale, mais ca ne marche pas avec la clé du plugin :( 
-  // j'ai un "vous n'avez pas les droits" 
-  $apiKey = config::byKey('api', 'core');  
+  
+  
+  $apiKey = config::byKey('api', __CLASS__);  // serait mieux, mais pas autorisé à effectuer cette action 
   $user = config::byKey('server_username', __CLASS__); 
   $pswd = config::byKey('server_password', __CLASS__); 
   $port = config::byKey('server_port', __CLASS__); 
@@ -93,10 +92,11 @@ public static function deamon_start($_debug = false) {
   $cmd .= ' --user=' . $user;
   $cmd .= ' --pwd=' . $pswd;
   $cmd .= ' --ip=' . $ip;
+  $cmd .= ' --pluginId=' . __CLASS__;
   $cmd .= ' --apikey=' . $apiKey;  
   $cmd .= ' --pidFile=' . jeedom::getTmpFolder(__CLASS__) . '/daemon.pid';
   $cmd .= ' --logLevel=' . log::convertLogLevel(log::getLogLevel(__CLASS__));  
-  $cmd .= ' --log=' . (__CLASS__);
+  $cmd .= ' --log=' . log::getPathToLog(__CLASS__);
   log::add(__CLASS__, 'debug', 'Cmd Launched: ' . $cmd);
 
   exec($cmd . ' >> ' . log::getPathToLog(__CLASS__) . ' 2>&1 &');
