@@ -236,7 +236,7 @@ class camPatrouilleCmd extends cmd {
   /*     * *********************Methode d'instance************************* */
 
   /*
-  * Permet d'empêcher la suppression des commandes même si elles ne sont pas dans la nouvelle configuration de l'équipement envoyé en JS
+  * Permet d'empêcher la suppression des commandes même si elles ne sont pas dans la nouvelle configuration de l'équipement envoyé en JS  
   public function dontRemoveCmd() {
     return true;
   }

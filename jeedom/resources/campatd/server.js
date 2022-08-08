@@ -100,8 +100,8 @@ function genEquipmentId(clientIP, clientHost){
     return clientHost;
 }
 
-function updateAttributeWithValue(equip, attributeName, attributeNewValue){   
-    log.debug("Search the command info to update for equipment Id: "+ equip.id); 
+function updateAttributeWithValue(equipmentId, attributeName, attributeNewValue){   
+    log.debug("Search the command info to update for equipment Id: "+ equipmentId); 
     return executeApiCmd( {
         "jsonrpc": "2.0",        
         "method": "eqLogic::fullById",
@@ -109,31 +109,38 @@ function updateAttributeWithValue(equip, attributeName, attributeNewValue){
             "apikey": args.apikey,
             "plugin": args.pluginId,
             "eqType_name": args.pluginId,
-            "id": equip.id
+            "id": equipmentId
         }
     })
     .then((response, error) =>{
         if (error !== undefined){
-            log.error("Error in updateFileUploaded "+error);            
+            log.error("Error in updateAttributeWithValue "+error);            
         }
-        else {
-            log.error("RESPONSE SEARCH CMD" + response);
+        else {     
+            var cmdToUpdt = undefined;       
             JSON.parse(response).result.cmds.forEach(cmd => {                
-                if (cmd.name === attributeName) {
-                    log.debug("Update "+attributeName+" command ID: "+ cmd.id +"  with: "+ attributeNewValue); 
-                    return executeApiCmd({
-                        "jsonrpc": "2.0",        
-                        "method": "cmd::event",
-                        "params": {
-                            "apikey":  args.apikey,
-                            "plugin": args.pluginId,
-                            "eqType_name": args.pluginId,
-                            "id": cmd.id,
-                            "value": attributeNewValue
-                        }
-                    });
+                if (cmd.logicalId === attributeName) {
+                    cmdToUpdt = cmd;
                 }
             });
+            if (cmdToUpdt === undefined){
+                log.error("Command "+attributeName+" not found in equipement: "+response);
+                return undefined;
+            }
+            else{
+                log.debug("Update "+attributeName+" command ID: "+ cmdToUpdt.id +"  with: "+ attributeNewValue); 
+                return executeApiCmd({
+                    "jsonrpc": "2.0",        
+                    "method": "cmd::event",
+                    "params": {
+                        "apikey":  args.apikey,
+                        "plugin": args.pluginId,
+                        "eqType_name": args.pluginId,
+                        "id": cmdToUpdt.id,
+                        "value": attributeNewValue
+                    }
+                });
+            }
         }
     });
 }
@@ -159,8 +166,7 @@ function getEquipement(clientIP, clientHostname){
                     log.debug("Equipment found! "+JSON.stringify(eq));
                     eqFound =eq;                    
                 }
-            });
-            log.error("Equipment found exit! "+JSON.stringify(eqFound));
+            });            
             return eqFound;
         }
         
@@ -173,8 +179,7 @@ function getEquipement(clientIP, clientHostname){
 
 function getOrCreateEquipement(clientIP, clientHostname) {
     return getEquipement(clientIP, clientHostname)
-    .then((equip, error) => {
-        log.error("EQUIPEMEINT TEST" + equip);
+    .then((equip, error) => {        
         if (error !== undefined) {
             log.error("Error when getting equipment" + error);
             return undefined;
@@ -202,44 +207,14 @@ function getOrCreateEquipement(clientIP, clientHostname) {
                         "cmd": 
                             [
                                 {
-                                    "name":"LastUploadedFile",                                    
+                                    "name":"LastUploadedFile",   
+                                    "logicalId": "LastUploadedFile",
                                     "display":{ 
                                         "icon":"",
                                         "invertBinary":"0"
                                     },
                                     "value":"",
                                     "currentValue": "",
-                                    "type":"info",
-                                    "subType":"string",
-                                    "isVisible":"1",
-                                    "isHistorized":"0",
-                                    "configuration":{"minValue":"","maxValue":""},
-                                    "unite":""
-                                },                    
-                                {                        
-                                    "name":"IP",
-                                    "object_id": "IP",
-                                    "display":{ 
-                                        "icon":"",
-                                        "invertBinary":"0"
-                                    },
-                                    "value":clientIP,
-                                    "currentValue": clientIP,
-                                    "type":"info",
-                                    "subType":"string",
-                                    "isVisible":"1",
-                                    "isHistorized":"0",
-                                    "configuration":{"minValue":"","maxValue":""},
-                                    "unite":""
-                                },
-                                {                        
-                                    "name":"Hostname",                                    
-                                    "display":{ 
-                                        "icon":"",
-                                        "invertBinary":"0"
-                                    },
-                                    "value": clientHostname,
-                                    "currentValue": clientHostname,
                                     "type":"info",
                                     "subType":"string",
                                     "isVisible":"1",
@@ -263,7 +238,7 @@ function getOrCreateEquipement(clientIP, clientHostname) {
             });
         }    
         else {
-            log.debug("The equipment found is: "+equip);
+            log.debug("The equipment found is: "+JSON.stringify(equip));
             return equip;
         } 
     });
@@ -306,11 +281,11 @@ class MyAlerterFileSystem extends FileSystem{
             if (hostname === undefined || hostname === ""){
                 hostname = "";
             }
-            log.info("Received new file from ip="+this.clientIP+" hostname="+hostname);
+            log.info("Received new file "+fileName+" from ip="+this.clientIP+" hostname="+hostname);
             getOrCreateEquipement(this.clientIP, hostname)
             .then((equip, error) => {
                 if (error === undefined){
-                    return updateAttributeWithValue(equip, "LastUploadedFile", fileName);    
+                    return updateAttributeWithValue(equip.id, "LastUploadedFile", fileName);    
                 }
                 else {
                     log.error("Error in getOrCreateEquipement"+ error);
