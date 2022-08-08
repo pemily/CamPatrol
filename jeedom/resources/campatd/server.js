@@ -93,6 +93,8 @@ ftpServer.listen().then(() => {
     log.info('CamPatrouille server is started')
 });
 
+
+// function for the jeedom equipment
 function genEquipmentId(clientIP, clientHost){
     if (clientHost === "" || clientHost === undefined){
         return clientIP;
@@ -252,30 +254,35 @@ class MyAlerterFileSystem extends FileSystem{
         this.clientIP = ip;                    
     }
 
-    get(fileName) {        
+    get(fileName) {      
+        log.debug("FTPSrv Get "+fileName);
         if (fileName === '.'){
-            return {
+            return Promise.resolve({
                 isDirectory: () => true
-            };
+            });
         }
         else{
-            return {};
+            return Promise.resolve({});
         }
     }
     
     currentDirectory(){
+        log.debug("FTPSrv currentDirectory");
         return "/";
     }
   
     list(path) {        
-        return [];
+        log.debug("FTPSrv list "+path);
+        return Promise.resolve([]);
     }
 
     chdir(path){        
-        return "/";
+        log.debug("FTPSrv chdir "+path);
+        return Promise.resolve(path);
     }
 
     write(fileName){        
+        log.debug("FTPSrv write "+fileName);
         // use the ssh port (22)
         dns.lookupService(this.clientIP, 22, (err, hostname, service) => {
             if (hostname === undefined || hostname === ""){
@@ -302,27 +309,34 @@ class MyAlerterFileSystem extends FileSystem{
             })
             .catch(e => log.error(e));
         });
-        
+
         return writableNoopStream();
     }
 
-    read(){        
+    read(fileName){        
+        log.debug("FTPSrv read "+fileName);
         return readableNoopStream({size: 10});
     }
 
     delete(path) {        
+        log.debug("FTPSrv delete "+path);
     }
 
     mkdir(path){                
+        log.debug("FTPSrv mkdir "+path);
+        //this.fsys.mkdir(path);
     }
 
-    rename(from, to){                
+    rename(from, to){           
+        log.debug("FTPSrv rename "+from+" => "+to);     
     }
 
     chmod(path, mode){        
+        log.debug("FTPSrv chmod "+path+" => "+mode);     
     }
 
     getUniqueName(){        
+        log.debug("FTPSrv getUniqueName");     
         return "tmp";
     }
   
