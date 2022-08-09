@@ -67,27 +67,6 @@ export class JeedomLog {
 /***************************COM*******************************/
 
 const URL_JEEDOM="http://localhost/core/api/jeeApi.php";
-/*
-export function send_change_immediate(payload){
-  log_debug('Send data to jeedom : '+JSON.stringify(payload));
-  
-  const req = http.request(
-    URL_JEEDOM,
-    {
-     method: 'POST'
-    },
-    (res) => {
-     res.resume();
-     res.on('end', () => {
-       if (!res.complete)
-         console.error(
-           'The connection was terminated while the message was still being sent');
-     });
-   });
-   req.write(JSON.stringify(payload));
-   req.end();
-}
-*/
 
 export function executeApiCmd(payload){ 
   return new Promise((resolve, reject) => {
