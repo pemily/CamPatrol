@@ -66,12 +66,10 @@ export class JeedomLog {
 
 /***************************COM*******************************/
 
-const URL_JEEDOM="http://localhost/core/api/jeeApi.php";
-
-export function executeApiCmd(payload){ 
+export function executeApiCmd(jeedomUrl, payload){ 
   return new Promise((resolve, reject) => {
     const req = http.request(
-      URL_JEEDOM,
+      jeedomUrl,
       { method: 'POST' },
       (response) => {
        let data = '';

@@ -1,11 +1,11 @@
 import { FtpSrv, FileSystem } from 'ftp-srv'; // https://github.com/QuorumDMS/ftp-srv
 import { readableNoopStream, writableNoopStream} from 'noop-stream';
-import { request } from 'http';
 import argsParser from 'args-parser';
-import dns from 'dns';
-import { JeedomLog, write_pid, executeApiCmd } from './jeedom.mjs';
 import { networkInterfaces } from 'os';
 import { Netmask } from 'netmask';
+import { JeedomLog, write_pid, executeApiCmd } from './jeedom.mjs';
+
+const JEEDOM_URL="http://localhost/core/api/jeeApi.php";
 
 
 const args = argsParser(process.argv);
@@ -127,16 +127,9 @@ ftpServer.listen().then(() => {
 
 
 // function for the jeedom equipment
-function genEquipmentId(clientIP, clientHost){
-    if (clientHost === "" || clientHost === undefined){
-        return clientIP;
-    }
-    return clientHost;
-}
-
 function updateAttributeWithValue(equipmentId, attributeName, attributeNewValue){   
     log.debug("Search the command info to update for equipment Id: "+ equipmentId); 
-    return executeApiCmd( {
+    return executeApiCmd(JEEDOM_URL, {
         "jsonrpc": "2.0",        
         "method": "eqLogic::fullById",
         "params": {
@@ -163,7 +156,7 @@ function updateAttributeWithValue(equipmentId, attributeName, attributeNewValue)
             }
             else{
                 log.debug("Update "+attributeName+" command ID: "+ cmdToUpdt.id +"  with: "+ attributeNewValue); 
-                return executeApiCmd({
+                return executeApiCmd(JEEDOM_URL, {
                     "jsonrpc": "2.0",        
                     "method": "cmd::event",
                     "params": {
@@ -179,9 +172,9 @@ function updateAttributeWithValue(equipmentId, attributeName, attributeNewValue)
     });
 }
 
-function getEquipement(clientIP, clientHostname){
+function getEquipement(clientIP){
     log.debug("Get all equipments");
-    return executeApiCmd( {
+    return executeApiCmd(JEEDOM_URL, {
         "jsonrpc": "2.0",        
         "method": "eqLogic::all",
         "params": {
@@ -191,12 +184,11 @@ function getEquipement(clientIP, clientHostname){
     })
     .then((response, reject) =>{        
         if (reject === undefined){
-            log.debug("Search equipment with IP: "+clientIP +" and hostname: "+clientHostname);
-            const equipementId = genEquipmentId(clientIP, clientHostname);
+            log.debug("Search equipment with IP: "+clientIP);
             
             var eqFound = undefined;
             JSON.parse(response).result.forEach(eq => { 
-                if (eq.logicalId === equipementId){
+                if (eq.logicalId === clientIP){
                     log.debug("Equipment found! "+JSON.stringify(eq));
                     eqFound =eq;                    
                 }
@@ -211,18 +203,17 @@ function getEquipement(clientIP, clientHostname){
 
 
 
-function getOrCreateEquipement(clientIP, clientHostname) {
-    return getEquipement(clientIP, clientHostname)
+function getOrCreateEquipement(clientIP) {
+    return getEquipement(clientIP)
     .then((equip, error) => {        
         if (error !== undefined) {
             log.error("Error when getting equipment" + error);
             return undefined;
         }
         if (equip === undefined){
-            log.debug("Create equipment with IP: "+ clientIP+" and hostname: "+clientHostname);
+            log.debug("Create equipment with IP: "+ clientIP);
             // crée l'équipement
-            const equipementId = genEquipmentId(clientIP, clientHostname);            
-            return executeApiCmd(
+            return executeApiCmd(JEEDOM_URL,
                 {
                     "jsonrpc": "2.0",    
                     "method": "eqLogic::save",
@@ -230,9 +221,9 @@ function getOrCreateEquipement(clientIP, clientHostname) {
                         "apikey": args.apikey,
                         "plugin": args.pluginId,
                         "eqType_name": args.pluginId,
-                        "name": equipementId,
-                        "object_id": equipementId,
-                        "logicalId": equipementId,
+                        "name": clientIP,
+                        "object_id": clientIP,
+                        "logicalId": clientIP,
                         "category": {
                             "security": "1"
                         },
@@ -252,8 +243,7 @@ function getOrCreateEquipement(clientIP, clientHostname) {
                                     "type":"info",
                                     "subType":"string",
                                     "isVisible":"1",
-                                    "isHistorized":"0",
-                                    "configuration":{"minValue":"","maxValue":""},
+                                    "isHistorized":"0",                                    
                                     "unite":""
                                 }
                             ]
@@ -333,33 +323,27 @@ class MyAlerterFileSystem extends FileSystem{
     }
 
     write(fileName){        
-        log.debug("FTPSrv write " + this.current_dir + fileName);
-        // use the ssh port (22)
-        dns.lookupService(this.clientIP, 22, (err, hostname, service) => {
-            if (hostname === undefined || hostname === ""){
-                hostname = "";
+        log.debug("FTPSrv write " + this.current_dir + fileName+" for ip: "+this.clientIP);        
+        log.info("Received new file " + this.current_dir + fileName + " from ip=" + this.clientIP);            
+        getOrCreateEquipement(this.clientIP)
+        .then((equip, error) => {
+            if (error === undefined){
+                return updateAttributeWithValue(equip.id, "Alert", this.current_dir + fileName);    
             }
-            log.info("Received new file " + this.current_dir + fileName + " from ip=" + this.clientIP + " hostname="+hostname);
-            getOrCreateEquipement(this.clientIP, hostname)
-            .then((equip, error) => {
-                if (error === undefined){
-                    return updateAttributeWithValue(equip.id, "Alert", this.current_dir + fileName);    
-                }
-                else {
-                    log.error("Error in getOrCreateEquipement"+ error);
-                    return undefined;
-                } 
-            })
-            .then((result, error) => {
-                if (error === undefined){
-                    log.debug("Command updated");
-                }
-                else{
-                    log.error("Error in updateFileUploaded "+ error)
-                }
-            })
-            .catch(e => log.error(e));
-        });
+            else {
+                log.error("Error in getOrCreateEquipement"+ error);
+                return undefined;
+            } 
+        })
+        .then((result, error) => {
+            if (error === undefined){
+                log.debug("Command updated");
+            }
+            else{
+                log.error("Error in updateFileUploaded "+ error)
+            }
+        })
+        .catch(e => log.error(e));
 
         return writableNoopStream();
     }

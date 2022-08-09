@@ -159,7 +159,7 @@ public static function deamon_stop() {
   }
 
   // Fonction exécutée automatiquement après la création de l'équipement
-  public function postInsert() {
+  public function postInsert() { 
   }
 
   // Fonction exécutée automatiquement avant la mise à jour de l'équipement
@@ -229,7 +229,7 @@ class camPatrouilleCmd extends cmd {
   /*
   public static $_widgetPossibility = array();
   */
-
+ 
   /*     * ***********************Methode static*************************** */
 
 

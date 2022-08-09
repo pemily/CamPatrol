@@ -1,0 +1,9 @@
+{
+"plugins/camPatrouille/desktop/php/camPatrouille.php": {
+    "Rechercher": "Rechercher"
+},
+"plugins/camPatrouille/core/class/camPatrouille.class.php": {
+    "Statut Name": "Statut Name"
+}
+}
+  
