@@ -19,6 +19,11 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<br>
 				<span>{{Ajouter}}</span>
 			</div> -->
+			<div class="cursor logoSecondary" data-action="bt_syncEqLogic" onClick="location.reload()">
+				<i class="fas fa-sync-alt"></i>
+				<br>
+				<span>{{Synchronisation}}</span>
+			</div>			
 			<div class="cursor eqLogicAction logoSecondary" data-action="gotoPluginConf">
 				<i class="fas fa-wrench"></i>
 				<br>
@@ -96,6 +101,13 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<div class="col-sm-6">									
 								<input type="text" class="eqLogicAttr form-control" data-l1key="logicalId" placeholder="IP" readonly/>									
 								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Intervalle minimale entre 2 alertes}}</label>
+								<div class="col-sm-2">									
+								<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="alertInterval" placeholder="60"/>																	
+								</div>								
+								<label class="col-sm-4">{{Secondes}}</label>
 							</div>							
 							<div class="form-group">
 								<label class="col-sm-4 control-label" >{{Objet parent}}</label>

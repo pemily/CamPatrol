@@ -72,6 +72,9 @@ class camPatrouille extends eqLogic {
 
 public static function deamon_start($_debug = false) {
   self::deamon_stop();
+  
+  exec("rm -f " . log::getPathToLog(__CLASS__) ); // remove the old log if it exists, because it can have the root owner, and jeedom has no more right to write in it
+
   log::add(__CLASS__, 'info', 'start server');
 
   $deamon_info = self::deamon_info();

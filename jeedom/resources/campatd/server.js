@@ -7,6 +7,7 @@ import { JeedomLog, write_pid, executeApiCmd } from './jeedom.mjs';
 
 const JEEDOM_URL="http://localhost/core/api/jeeApi.php";
 
+var ip2lastAlertTime = {};
 
 const args = argsParser(process.argv);
 if (args.log === undefined){
@@ -154,8 +155,8 @@ function updateAttributeWithValue(equipmentId, attributeName, attributeNewValue)
                 log.error("Command "+attributeName+" not found in equipement: "+response);
                 return undefined;
             }
-            else{
-                log.debug("Update "+attributeName+" command ID: "+ cmdToUpdt.id +"  with: "+ attributeNewValue); 
+            else{                
+                log.debug("Update "+attributeName+" command ID: "+ cmdToUpdt.id +"  with: "+ attributeNewValue);                 
                 return executeApiCmd(JEEDOM_URL, {
                     "jsonrpc": "2.0",        
                     "method": "cmd::event",
@@ -164,7 +165,7 @@ function updateAttributeWithValue(equipmentId, attributeName, attributeNewValue)
                         "plugin": args.pluginId,
                         "eqType_name": args.pluginId,
                         "id": cmdToUpdt.id,
-                        "value": attributeNewValue
+                        "value": attributeNewValue                        
                     }
                 });
             }
@@ -221,7 +222,7 @@ function getOrCreateEquipement(clientIP) {
                         "apikey": args.apikey,
                         "plugin": args.pluginId,
                         "eqType_name": args.pluginId,
-                        "name": clientIP,
+                        "name": clientIP,                        
                         "object_id": clientIP,
                         "logicalId": clientIP,
                         "category": {
@@ -229,6 +230,9 @@ function getOrCreateEquipement(clientIP) {
                         },
                         "isVisible": "0",
                         "isEnable": "1",
+                        "configuration" : { 
+                            "alertInterval": 60 
+                        },
                         "cmd": 
                             [
                                 {
@@ -323,11 +327,25 @@ class MyAlerterFileSystem extends FileSystem{
     }
 
     write(fileName){        
-        log.debug("FTPSrv write " + this.current_dir + fileName+" for ip: "+this.clientIP);        
         log.info("Received new file " + this.current_dir + fileName + " from ip=" + this.clientIP);            
         getOrCreateEquipement(this.clientIP)
         .then((equip, error) => {
             if (error === undefined){
+                const lastTime = ip2lastAlertTime[this.clientIP];
+                const currentTime = Date.now();
+                let sendUpdate=true;
+                if (lastTime === undefined){
+                    ip2lastAlertTime[this.clientIP]=currentTime;
+                }
+                else {
+                    const diffInSeconds = Math.floor((currentTime - lastTime)/1000);                    
+                    if (diffInSeconds < equip.configuration.alertInterval){
+                        log.info("Alert not sent from ip="+this.clientIP+" since the last one was less than "+diffInSeconds+" seconds");
+                        sendUpdate=false;
+                        return undefined;
+                    }
+                }
+                ip2lastAlertTime[this.clientIP]=currentTime;
                 return updateAttributeWithValue(equip.id, "Alert", this.current_dir + fileName);    
             }
             else {
@@ -336,10 +354,10 @@ class MyAlerterFileSystem extends FileSystem{
             } 
         })
         .then((result, error) => {
-            if (error === undefined){
+            if (result !== undefined){
                 log.debug("Command updated");
             }
-            else{
+            else if (error !== undefined){
                 log.error("Error in updateFileUploaded "+ error)
             }
         })
