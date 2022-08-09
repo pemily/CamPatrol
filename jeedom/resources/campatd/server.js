@@ -241,8 +241,8 @@ function getOrCreateEquipement(clientIP, clientHostname) {
                         "cmd": 
                             [
                                 {
-                                    "name":"LastUploadedFile",   
-                                    "logicalId": "LastUploadedFile",
+                                    "name":"Alert",   
+                                    "logicalId": "Alert",
                                     "display":{ 
                                         "icon":"",
                                         "invertBinary":"0"
@@ -283,7 +283,8 @@ class MyAlerterFileSystem extends FileSystem{
 
     constructor(ip){
         super();
-        this.clientIP = ip;                    
+        this.clientIP = ip;        
+        this.current_dir = "/";
     }
 
     get(fileName) {      
@@ -304,27 +305,45 @@ class MyAlerterFileSystem extends FileSystem{
     }
   
     list(path) {        
-        log.debug("FTPSrv list "+path);
+        log.debug("FTPSrv list " + path);
         return Promise.resolve([]);
     }
 
     chdir(path){        
-        log.debug("FTPSrv chdir "+path);
-        return Promise.resolve(path);
+        log.debug("FTPSrv chdir " + path);
+        if (path === undefined || path === ""){
+            this.current_dir = "/";
+        }        
+        else if (!path.endsWith("/")){
+            this.current_dir = path +"/";
+        }
+        else{
+            this.current_dir = path;
+        }
+        if (this.current_dir.startsWith(".")){            
+            this.current_dir = this.current_dir.substring(0);            
+        }
+        if (this.current_dir.startsWith("//")){
+            this.current_dir = this.current_dir.substring(0);
+        }
+        if (!this.current_dir.startsWith("/")){
+            this.current_dir = "/" + this.current_dir;
+        }
+        return Promise.resolve(this.current_dir);
     }
 
     write(fileName){        
-        log.debug("FTPSrv write "+fileName);
+        log.debug("FTPSrv write " + this.current_dir + fileName);
         // use the ssh port (22)
         dns.lookupService(this.clientIP, 22, (err, hostname, service) => {
             if (hostname === undefined || hostname === ""){
                 hostname = "";
             }
-            log.info("Received new file "+fileName+" from ip="+this.clientIP+" hostname="+hostname);
+            log.info("Received new file " + this.current_dir + fileName + " from ip=" + this.clientIP + " hostname="+hostname);
             getOrCreateEquipement(this.clientIP, hostname)
             .then((equip, error) => {
                 if (error === undefined){
-                    return updateAttributeWithValue(equip.id, "LastUploadedFile", fileName);    
+                    return updateAttributeWithValue(equip.id, "Alert", this.current_dir + fileName);    
                 }
                 else {
                     log.error("Error in getOrCreateEquipement"+ error);
