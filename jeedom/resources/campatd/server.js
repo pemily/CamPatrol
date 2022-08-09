@@ -106,7 +106,7 @@ ftpServer.on('login', (data, resolve, reject) => {
     }
      
     if(data.username === args.user && data.password === args.pwd){
-        log.info("Connection successful ");
+        log.debug("Connection successful ");
         return resolve({ fs: new MyAlerterFileSystem(ip)});
     }
     return reject({
