@@ -358,8 +358,7 @@ class MyAlerterFileSystem extends FileSystem{
     }
 
     mkdir(path){                
-        log.debug("FTPSrv mkdir "+path);
-        //this.fsys.mkdir(path);
+        log.debug("FTPSrv mkdir "+path);        
     }
 
     rename(from, to){           
