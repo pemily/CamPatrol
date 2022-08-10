@@ -1,5 +1,5 @@
 {
-	"id" : "camPatrouille",
+	"id" : "camPatrol",
 	"name" : "CamPatrouille",
 	"description" : {
 		"fr_FR": "Plugin permettant d'être alerté lorsqu'une de vos caméras detecte une présence.<br>Beaucoup de caméras incluent une détection de mouvement ou humaine. Le but de se plugin est de s'appuyer sur cette détection et d'être automatiquement notifié dans jeedom lorsqu'il y a une détection.<br>Cela permet de déclencher une commande qui pourra prendre une photo et vous l'envoyer par exemple.<br>Si votre caméra au moment ou elle détecte quelque chose est capable d'enregistrer la séquence sur un site FTP, alors elle est compatible avec ce plugin",
