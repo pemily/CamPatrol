@@ -8,6 +8,7 @@ import { JeedomLog, write_pid, executeApiCmd } from './jeedom.mjs';
 const JEEDOM_URL="http://localhost/core/api/jeeApi.php";
 
 var ip2lastAlertTime = {};
+var ip2IntervalTime = {};
 
 const args = argsParser(process.argv);
 if (args.log === undefined){
@@ -326,24 +327,38 @@ class MyAlerterFileSystem extends FileSystem{
         return Promise.resolve(this.current_dir);
     }
 
+    isTooEarly(alertInterval){
+        if (alertInterval !== undefined){
+            const lastTime = ip2lastAlertTime[this.clientIP];
+            const currentTime = Date.now();
+            if (lastTime !== undefined){
+                const diffInSeconds = Math.floor((currentTime - lastTime)/1000);                     
+                if (diffInSeconds < alertInterval){
+                    log.info("Alert not sent from ip="+this.clientIP+" since the last one was less than "+diffInSeconds+" seconds");
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     write(fileName){        
-        log.info("Received new file " + this.current_dir + fileName + " from ip=" + this.clientIP);            
+        log.info("Received new file " + this.current_dir + fileName + " from ip=" + this.clientIP);      
+        
+        // if we already have the interval time for this client IP
+        // we can check and avoir a call to the getOrCreateEquipment
+        if (isTooEarly(ip2IntervalTime[this.clientIP])){            
+            return writableNoopStream();
+        }
+
+        
         getOrCreateEquipement(this.clientIP)
         .then((equip, error) => {
             if (error === undefined){
-                const lastTime = ip2lastAlertTime[this.clientIP];
-                const currentTime = Date.now();
-                let sendUpdate=true;
-                if (lastTime === undefined){
-                    ip2lastAlertTime[this.clientIP]=currentTime;
-                }
-                else {
-                    const diffInSeconds = Math.floor((currentTime - lastTime)/1000);                    
-                    if (diffInSeconds < equip.configuration.alertInterval){
-                        log.info("Alert not sent from ip="+this.clientIP+" since the last one was less than "+diffInSeconds+" seconds");
-                        sendUpdate=false;
-                        return undefined;
-                    }
+                // update the interval time if it changes or not yet in the map
+                ip2IntervalTime[this.clientIP] = equip.configuration.alertInterval;                
+                if (isTooEarly(equip.configuration.alertInterval)){
+                    return undefined;
                 }
                 ip2lastAlertTime[this.clientIP]=currentTime;
                 return updateAttributeWithValue(equip.id, "Alert", this.current_dir + fileName);    
