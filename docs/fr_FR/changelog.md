@@ -1,4 +1,4 @@
-# Changelog plugin CamPatrouille
+# Changelog plugin CamPatrol
 
 >**IMPORTANT**
 >

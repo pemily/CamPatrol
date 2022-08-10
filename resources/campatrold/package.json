@@ -1,7 +1,7 @@
 {
-  "name": "cam_patrouille_server",
+  "name": "cam_patrol_server",
   "version": "1.0.0",
-  "description": "To detect camera alert",
+  "description": "To receive camera alert",
   "private": true,
   "author": "Pascal Emily",
   "license": "Apache-2.0",

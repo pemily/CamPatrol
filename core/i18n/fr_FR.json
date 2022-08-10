@@ -1,8 +1,8 @@
 {
-"plugins/camPatrouille/desktop/php/camPatrouille.php": {
+"plugins/camPatrol/desktop/php/camPatrol.php": {
     "Rechercher": "Rechercher"
 },
-"plugins/camPatrouille/core/class/camPatrouille.class.php": {
+"plugins/camPatrol/core/class/camPatrol.class.php": {
     "Statut Name": "Statut Name"
 }
 }

@@ -23,7 +23,7 @@ const log = new JeedomLog(args.log, args.logLevel);
 log.info("Server started with: "+process.argv);
 
 function usage(){
-    log.info("node server.js --pidFile=/tmp/campat.pid --port=8090 --user=patrouilleur --pwd=patrouilleur --apikey=XXXXXXX --ip=0.0.0.0 --logLevel=debug");    
+    log.info("node server.js --pidFile=/tmp/campatrol.pid --port=8090 --user=campat --pwd=campat --apikey=XXXXXXX --ip=0.0.0.0 --logLevel=debug");    
     process.exit(1);
 }
 
@@ -61,7 +61,7 @@ write_pid(args.pidFile);
 
 log.debug("Server config port: "+args.port+" user: "+args.user);
 
-////////////////////////////////////////////////
+
 const nets = networkInterfaces();
 function getNetworks() {
    let networks = {};
@@ -88,12 +88,12 @@ const resolverFunction = (address) => {
    }
    return "127.0.0.1";
 }
-////////////////////////////////////////////////
+
 const ftpServer = new FtpSrv({
     url: "ftp://"+ args.ip + ":" + args.port,    
     anonymous:false,
     tls: false,
-    greeting : [ "Welcome to CamPatrouille" ],
+    greeting : [ "Welcome to CamPatrol" ],
     pasv_url: resolverFunction
 });
 
@@ -123,7 +123,7 @@ ftpServer.on ( 'client-error', (connection, context, error) =>
 });
 
 ftpServer.listen().then(() => {
-    log.info('CamPatrouille server is started')
+    log.info('CamPatrol server is started')
 });
 
 

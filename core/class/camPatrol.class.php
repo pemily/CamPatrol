@@ -18,7 +18,7 @@
 /* * ***************************Includes********************************* */
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
-class camPatrouille extends eqLogic {
+class camPatrol extends eqLogic {
   /*     * *************************Attributs****************************** */
 
   /*
@@ -90,7 +90,7 @@ public static function deamon_start($_debug = false) {
   $port = config::byKey('server_port', __CLASS__); 
   $ip = config::byKey('server_ip', __CLASS__);  
 
-  $cmd = 'sudo node ' . __DIR__ . '/../../resources/campatd/server.js';
+  $cmd = 'sudo node ' . __DIR__ . '/../../resources/campatrold/server.js';
   $cmd .= ' --port=' . $port;
   $cmd .= ' --user=' . $user;
   $cmd .= ' --pwd=' . $pswd;
@@ -103,7 +103,7 @@ public static function deamon_start($_debug = false) {
   log::add(__CLASS__, 'debug', 'Cmd Launched: ' . $cmd);
 
   exec($cmd . ' >> ' . log::getPathToLog(__CLASS__) . ' 2>&1 &');
-  log::add(__CLASS__, 'info', 'server CamPatrouille launched');
+  log::add(__CLASS__, 'info', 'server CamPatrol launched');
 
   sleep(5);
 }
@@ -226,7 +226,7 @@ public static function deamon_stop() {
 
 }
 
-class camPatrouilleCmd extends cmd {
+class camPatrolCmd extends cmd {
   /*     * *************************Attributs****************************** */
 
   /*

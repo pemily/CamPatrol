@@ -18,13 +18,13 @@
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
 // Fonction exécutée automatiquement après l'installation du plugin
-function camPatrouille_install() {
+function camPatrol_install() {
 }
 
 // Fonction exécutée automatiquement après la mise à jour du plugin
-function camPatrouille_update() {
+function camPatrol_update() {
 }
 
 // Fonction exécutée automatiquement après la suppression du plugin
-function camPatrouille_remove() {
+function camPatrol_remove() {
 }

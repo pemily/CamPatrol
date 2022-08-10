@@ -1,4 +1,4 @@
-# Plugin CamPatrouille
+# Plugin CamPatrol
 
 TODO Ce "template de plugin" sert de base à la réalisation de plugins pour **Jeedom**.
 
