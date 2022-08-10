@@ -1,9 +1,71 @@
 {
-"plugins/camPatrol/desktop/php/camPatrol.php": {
-    "Rechercher": "Rechercher"
-},
-"plugins/camPatrol/core/class/camPatrol.class.php": {
-    "Statut Name": "Statut Name"
+    "plugins\/camPatrol\/core\/class\/camPatrol.class.php": {
+        "Commande lancée: ": "Commande lancée: ",
+        "Démarrage du serveur FTP": "Démarrage du serveur FTP",
+        "Démarrage du serveur FTP effectué": "Démarrage du serveur FTP effectué",
+        "L'IP n'est pas configurée": "L'IP n'est pas configurée",
+        "Le mot de passe n'est pas configuré": "Le mot de passe n'est pas configuré",
+        "Le nom d'utilisateur n'est pas configuré": "Le nom d'utilisateur n'est pas configuré",
+        "Le port n'est pas configuré": "Le port n'est pas configuré",
+        "Stop le FTP Serveur": "Stop le FTP Serveur",
+        "Veuillez vérifier la configuration": "Veuillez vérifier la configuration"
+    },
+    "plugins\/camPatrol\/desktop\/js\/camPatrol.js": {
+        "Afficher": "Afficher",
+        "Aucune": "Aucune",
+        "Choisir une icône": "Choisir une icône",
+        "Commande info liée": "Commande info liée",
+        "Historiser": "Historiser",
+        "Inverser": "Inverser",
+        "Max": "Max",
+        "Min": "Min",
+        "Nom de la commande": "Nom de la commande",
+        "Supprimer la commande": "Supprimer la commande",
+        "Unité": "Unité"
+    },
+    "plugins\/camPatrol\/desktop\/php\/camPatrol.php": {
+        "401 - Accès non autorisé": "401 - Accès non autorisé",
+        "Actions": "Actions",
+        "Activer": "Activer",
+        "Ajouter": "Ajouter",
+        "Ajouter une commande": "Ajouter une commande",
+        "Aucun": "Aucun",
+        "Aucun équipement CamPatrouille trouvé, cliquer sur \"Ajouter\" pour commencer": "Aucun équipement CamPatrouille trouvé, cliquer sur \"Ajouter\" pour commencer",
+        "Catégorie": "Catégorie",
+        "Commandes": "Commandes",
+        "Configuration": "Configuration",
+        "Configuration avancée": "Configuration avancée",
+        "Description": "Description",
+        "Dupliquer": "Dupliquer",
+        "Equipement": "Equipement",
+        "Equipement non visible": "Equipement non visible",
+        "Equipement visible": "Equipement visible",
+        "Gestion": "Gestion",
+        "IP": "IP",
+        "Informations": "Informations",
+        "Intervalle minimale entre 2 alertes": "Intervalle minimale entre 2 alertes",
+        "Mes équipements": "Mes équipements",
+        "Nom": "Nom",
+        "Nom de l'équipement": "Nom de l'équipement",
+        "Objet parent": "Objet parent",
+        "Options": "Options",
+        "Paramètres généraux": "Paramètres généraux",
+        "Rechercher": "Rechercher",
+        "Sauvegarder": "Sauvegarder",
+        "Secondes": "Secondes",
+        "Supprimer": "Supprimer",
+        "Synchronisation": "Synchronisation",
+        "Type": "Type",
+        "Visible": "Visible"
+    },
+    "plugins\/camPatrol\/plugin_info\/configuration.php": {
+        "L'IP FTP:": "L'IP FTP:",
+        "L'adresse IP du server FTP. Ne mettez à jour qu'en cas de problème reseaux.": "L'adresse IP du server FTP. Ne mettez à jour qu'en cas de problème reseaux.",
+        "Le mot de passe de votre choix": "Le mot de passe de votre choix",
+        "Le nom de votre choix": "Le nom de votre choix",
+        "Le port FTP :": "Le port FTP :",
+        "Le port du serveur FTP de votre choix": "Le port du serveur FTP de votre choix",
+        "Mot de passe :": "Mot de passe :",
+        "Nom d'utilisateur :": "Nom d'utilisateur :"
+    }
 }
-}
-  

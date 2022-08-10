@@ -25,32 +25,32 @@ if (!isConnect()) {
 <form class="form-horizontal">
   <fieldset>
     <div class="form-group">
-      <label class="col-md-4 control-label">{{Username :}}
-        <sup><i class="fas fa-question-circle tooltips" title="{{The username of your choice}}"></i></sup>
+      <label class="col-md-4 control-label">{{Nom d'utilisateur :}}
+        <sup><i class="fas fa-question-circle tooltips" title="{{Le nom de votre choix}}"></i></sup>
       </label>
       <div class="col-md-4">
         <input class="configKey form-control" data-l1key="server_username" placeholder="campat"/>
       </div>
     </div>
     <div class="form-group">
-      <label class="col-md-4 control-label">{{Password :}}
-        <sup><i class="fas fa-question-circle tooltips" title="{{The password of your choice}}"></i></sup>
+      <label class="col-md-4 control-label">{{Mot de passe :}}
+        <sup><i class="fas fa-question-circle tooltips" title="{{Le mot de passe de votre choix}}"></i></sup>
       </label>
       <div class="col-md-4">
         <input class="configKey form-control" data-l1key="server_password" placeholder="campat"/>
       </div>
     </div>
     <div class="form-group">
-      <label class="col-md-4 control-label">{{FTP Port :}}
-        <sup><i class="fas fa-question-circle tooltips" title="{{The ftp server port of your choice}}"></i></sup>
+      <label class="col-md-4 control-label">{{Le port FTP :}}
+        <sup><i class="fas fa-question-circle tooltips" title="{{Le port du serveur FTP de votre choix}}"></i></sup>
       </label>
       <div class="col-md-4">
         <input class="configKey form-control" data-l1key="server_port" placeholder="21"/>
       </div>
     </div>
     <div class="form-group">
-      <label class="col-md-4 control-label">{{FTP IP :}}
-        <sup><i class="fas fa-question-circle tooltips" title="{{The ftp server ip. Update it only in case of network problem.}}"></i></sup>
+      <label class="col-md-4 control-label">{{L'IP FTP:}}
+        <sup><i class="fas fa-question-circle tooltips" title="{{L'adresse IP du server FTP. Ne mettez à jour qu'en cas de problème reseaux.}}"></i></sup>
       </label>
       <div class="col-md-4">
         <input class="configKey form-control" data-l1key="server_ip" placeholder="0.0.0.0" />

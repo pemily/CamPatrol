@@ -23,7 +23,7 @@ const log = new JeedomLog(args.log, args.logLevel);
 log.info("Server started with: "+process.argv);
 
 function usage(){
-    log.info("node server.js --pidFile=/tmp/campatrol.pid --port=8090 --user=campat --pwd=campat --apikey=XXXXXXX --ip=0.0.0.0 --logLevel=debug");    
+    log.info("node server.js --pidFile=/tmp/jeedom/camPatrol/daemon.pid --port=8090 --user=campat --pwd=campat --apikey=XXXXXXX --ip=0.0.0.0 --logLevel=debug");    
     process.exit(1);
 }
 

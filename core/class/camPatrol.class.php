@@ -54,16 +54,16 @@ class camPatrol extends eqLogic {
     $ip = config::byKey('server_ip', __CLASS__);     
     if ($user == '') {
         $return['launchable'] = 'nok';
-        $return['launchable_message'] = __('Le nom d\'utilisateur n\'est pas configuré', __FILE__);
+        $return['launchable_message'] = __("Le nom d'utilisateur n'est pas configuré", __FILE__);
     } elseif ($pswd == '') {
         $return['launchable'] = 'nok';
-        $return['launchable_message'] = __('Le mot de passe n\'est pas configuré', __FILE__);
+        $return['launchable_message'] = __("Le mot de passe n'est pas configuré", __FILE__);
     } elseif ($port == '') {
         $return['launchable'] = 'nok';
-        $return['launchable_message'] = __('Le port n\'est pas configuré', __FILE__);
+        $return['launchable_message'] = __("Le port n'est pas configuré", __FILE__);
     }  elseif ($ip == '') {
         $return['launchable'] = 'nok';
-        $return['launchable_message'] = __('L\'ip n\'est pas configurée', __FILE__);
+        $return['launchable_message'] = __("L'IP n'est pas configurée", __FILE__);
     }    
 
     return $return;
@@ -73,24 +73,22 @@ class camPatrol extends eqLogic {
 public static function deamon_start($_debug = false) {
   self::deamon_stop();
   
-  exec("rm -f " . log::getPathToLog(__CLASS__) ); // remove the old log if it exists, because it can have the root owner, and jeedom has no more right to write in it
-
-  log::add(__CLASS__, 'info', 'start server');
+  log::add(__CLASS__, 'info', __('Démarrage du serveur FTP', __FILE__));
 
   $deamon_info = self::deamon_info();
   if ($deamon_info['launchable'] != 'ok') {
-    throw new Exception(__('Veuillez vérifier la configuration', __FILE__));
+    throw new Exception(__("Veuillez vérifier la configuration", __FILE__));
   }
 
   
-  
-  $apiKey = config::byKey('api', __CLASS__);  // serait mieux, mais pas autorisé à effectuer cette action 
+  $plugin = plugin::byId(__CLASS__);
+  $apiKey = config::byKey('api', __CLASS__); 
   $user = config::byKey('server_username', __CLASS__); 
   $pswd = config::byKey('server_password', __CLASS__); 
   $port = config::byKey('server_port', __CLASS__); 
   $ip = config::byKey('server_ip', __CLASS__);  
 
-  $cmd = 'sudo node ' . __DIR__ . '/../../resources/campatrold/server.js';
+  $cmd = 'node ' . __DIR__ . '/../../resources/campatrold/server.js';
   $cmd .= ' --port=' . $port;
   $cmd .= ' --user=' . $user;
   $cmd .= ' --pwd=' . $pswd;
@@ -100,16 +98,16 @@ public static function deamon_start($_debug = false) {
   $cmd .= ' --pidFile=' . jeedom::getTmpFolder(__CLASS__) . '/daemon.pid';
   $cmd .= ' --logLevel=' . log::convertLogLevel(log::getLogLevel(__CLASS__));  
   $cmd .= ' --log=' . log::getPathToLog(__CLASS__);
-  log::add(__CLASS__, 'debug', 'Cmd Launched: ' . $cmd);
+  log::add(__CLASS__, 'debug', __("Commande lancée: ", __FILE__) . $cmd);
 
-  exec($cmd . ' >> ' . log::getPathToLog(__CLASS__) . ' 2>&1 &');
-  log::add(__CLASS__, 'info', 'server CamPatrol launched');
+  shell_exec(system::getCmdSudo() . $cmd . ' >> ' . log::getPathToLog(__CLASS__) . ' 2>&1 &');
+  log::add(__CLASS__, 'info', __("Démarrage du serveur FTP effectué", __FILE__));
 
   sleep(5);
 }
 
 public static function deamon_stop() {
-  log::add(__CLASS__, 'info', 'stop server');
+  log::add(__CLASS__, 'info',  __("Stop le FTP Serveur", __FILE__));
   $deamon_info = self::deamon_info();
   $pid_file = jeedom::getTmpFolder(__CLASS__) . '/daemon.pid';  
   if (file_exists($pid_file)) {
