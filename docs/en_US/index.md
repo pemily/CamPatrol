@@ -21,7 +21,7 @@ In your camera configuration panel, you can choose how it reacts when a detectio
   - Store on the SD Card
   - Send by email
   - Send by FTP
-  - **But you never have "Alert" Jeedom** ![Pleure](../images/cry-16.png)
+  - **But you never have the option "Alert" Jeedom** ![Pleure](../images/cry-16.png)
 
 This plugin allows you to trigger a Jeedom scenario each time there is a camera detection.
 You can then choose to:
