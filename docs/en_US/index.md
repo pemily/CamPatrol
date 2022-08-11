@@ -1,14 +1,14 @@
-# ![CamPatrom Icon](../images/camPatrol_icon-50.png) Plugin CamPatrol
-
+![CamPatrom Icon](../images/camPatrol_icon-50.png) Plugin CamPatrol
+==
 ---
 
-# Description
+Description
+==
 
 Plugin able to react when one of your camera detect a presence.
 
----
-
-# Principle
+Principle
+==
 
 Many cameras offer detection. To perform that detection they can used several ways
 * An image analysis based on the amount of pixels change
@@ -16,13 +16,12 @@ Many cameras offer detection. To perform that detection they can used several wa
 * An audio detection over a configurable threshold
 
 In your camera configuration panel, you can choose how it reacts when a detection is triggered.
-1) Take one/several snapshot(s) (with a delay) or create a video for a time lapse.
-2) Which process is done with your picture/video. Generally you have the following options
-    - Store on the SD Card
-    - Send by email
-    - Send by FTP
-    - **But you never have "Alert" Jeedom** 
-        - ![Pleure](../images/cry-32.png)
+- Take one/several snapshot(s) (with a delay) or create a video for a time lapse.
+- Which process is done with your picture/video. Generally you have the following options
+  - Store on the SD Card
+  - Send by email
+  - Send by FTP
+  - **But you never have "Alert" Jeedom** ![Pleure](../images/cry-16.png)
 
 This plugin allows you to trigger a Jeedom scenario each time there is a camera detection.
 You can then choose to:
@@ -34,23 +33,21 @@ You can then choose to:
 
 > ___All the information requested for the plugin stay in your local network, nothing is send on the internet.___
 
----
-
-# Compatible Cameras
+Compatible Cameras
+==
 
 All cameras:
 - Which can trigger an event on a detection (motion/human/audio).
 - Which have the "send by FTP" feature on detection.
 
----
-
-# Prerequisite
+Prerequisite
+==
 
 >  The IP Addresses of your cameras and of Jeedom must be **[static](https://community.fs.com/blog/dhcp-vs-static-ip-differences.html).**
 
----
 
-# Install
+Install
+==
 
 To install the plugin you have to define
  * A username _(campatrol by default)_
@@ -62,9 +59,8 @@ To install the plugin you have to define
 
 ![Installation](../images/en_install.png)
 
----
-
-# Camera Configuration
+Camera Configuration
+==
 
 For each of your camera, you have to configure the FTP Server with the data set in Jeedom
 
@@ -73,7 +69,8 @@ For each of your camera, you have to configure the FTP Server with the data set 
 
 Examples of possible configuration.
 
-## **For a D-Link camera** 
+**For a D-Link camera** 
+===
 
 - Server FTP Configuration
   - Host Name: Set the local IP address of your Jeedom server
@@ -89,7 +86,8 @@ Examples of possible configuration.
 
   ![Audio Detection Config](../images/DLinkSoundDetectionConfig.png)
 
-## **For an IPCam camera**
+**For an IPCam camera**
+===
 
 - Server FTP Configuration
 
@@ -104,9 +102,9 @@ Examples of possible configuration.
   
   ![Audio Detection Config](../images/en_IPCamSoundDetection.png)
 
----
 
-# Jeedom Configuration
+Jeedom Configuration
+==
 
 Cameras are automatically created at the first detection or when you test the connection in the camera configuration.
 
@@ -124,12 +122,9 @@ The equipment provide only one information command. This information will contai
 
 ![Jeedom Command](../images/en_JeedomEquipmentCmd.png)
 
----
-
-# Create a scenario on a detection
+Create a scenario on a detection
+==
 
 To execute an action on a camera alert, you can create a scénario and select the command of your new equipment in the **Event** field.
 
 ![Jeedom Command](../images/en_ScenarioJeedom.png)
-
----

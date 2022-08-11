@@ -22,8 +22,7 @@ Dans la configuration de votre caméra, vous devez choisir comment elle doit ré
   - Stocker sur sa carte SD
   - Envoyer par mail
   - Envoyer par FTP
-  - **Mais vous n'avez jamais "Alerter" Jeedom** 
-  - ![Pleure](../images/cry-32.png)
+  - **Mais vous n'avez jamais "Alerter" Jeedom** ![Pleure](../images/cry-16.png)
 
 Ce Plugin va vous permettre de déclencher un scénario Jeedom à chaque fois que vous aurez une detection de l'une de vos caméra.
 Vous pourrez alors choisir de
