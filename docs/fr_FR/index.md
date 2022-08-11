@@ -72,8 +72,8 @@ Pour chacune de vos caméra, vous devrez configurer le serveur FTP avec les donn
 
 Exemples de configuration possible.
 
-**Pour une caméra D-Link** 
-===
+Pour une caméra D-Link
+====
 - Configuration du serveur FTP
   - Host Name: Mettre l'adresse IP Local de votre serveur Jeedom
   - Port/User Name/Password: Sont les valeurs définies dans la partie installation du plugin
@@ -88,8 +88,8 @@ Exemples de configuration possible.
   
   ![Audio Detection Config](../images/DLinkSoundDetectionConfig.png)
 
-**Pour une caméra IPCam**
-===
+Pour une caméra IPCam
+====
 - Configuration du serveur FTP
 
   ![FTP Config](../images/fr_IPCamFTPEnable.png)

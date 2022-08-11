@@ -69,8 +69,8 @@ For each of your camera, you have to configure the FTP Server with the data set 
 
 Examples of possible configuration.
 
-**For a D-Link camera** 
-===
+For a D-Link camera
+====
 
 - Server FTP Configuration
   - Host Name: Set the local IP address of your Jeedom server
@@ -86,8 +86,8 @@ Examples of possible configuration.
 
   ![Audio Detection Config](../images/DLinkSoundDetectionConfig.png)
 
-**For an IPCam camera**
-===
+For an IPCam camera
+====
 
 - Server FTP Configuration
 
