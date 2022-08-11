@@ -1,12 +1,14 @@
 # ![CamPatrom Icon](../images/camPatrol_icon-50.png) Plugin CamPatrol
 
-## 1) Description
+---
+
+# Description
 
 Plugin able to react when one of your camera detect a presence.
 
 ---
 
-## 2) Principle
+# Principle
 
 Many cameras offer detection. To perform that detection they can used several ways
 * An image analysis based on the amount of pixels change
@@ -34,7 +36,7 @@ You can then choose to:
 
 ---
 
-## 3) Compatible Cameras
+# Compatible Cameras
 
 All cameras:
 - Which can trigger an event on a detection (motion/human/audio).
@@ -42,13 +44,13 @@ All cameras:
 
 ---
 
-## 4) Prerequisite
+# Prerequisite
 
 >  The IP Addresses of your cameras and of Jeedom must be **[static](https://community.fs.com/blog/dhcp-vs-static-ip-differences.html).**
 
 ---
 
-## 5) Install
+# Install
 
 To install the plugin you have to define
  * A username _(campatrol by default)_
@@ -62,7 +64,7 @@ To install the plugin you have to define
 
 ---
 
-## 6) Camera Configuration
+# Camera Configuration
 
 For each of your camera, you have to configure the FTP Server with the data set in Jeedom
 
@@ -71,7 +73,7 @@ For each of your camera, you have to configure the FTP Server with the data set 
 
 Examples of possible configuration.
 
-### **For a D-Link camera** 
+## **For a D-Link camera** 
 
 - Server FTP Configuration
   - Host Name: Set the local IP address of your Jeedom server
@@ -87,7 +89,7 @@ Examples of possible configuration.
 
   ![Audio Detection Config](../images/DLinkSoundDetectionConfig.png)
 
-### **For an IPCam camera**
+## **For an IPCam camera**
 
 - Server FTP Configuration
 
@@ -104,7 +106,7 @@ Examples of possible configuration.
 
 ---
 
-## 7) Jeedom Configuration
+# Jeedom Configuration
 
 Cameras are automatically created at the first detection or when you test the connection in the camera configuration.
 
@@ -124,7 +126,7 @@ The equipment provide only one information command. This information will contai
 
 ---
 
-## 8) Create a scenario on a detection
+# Create a scenario on a detection
 
 To execute an action on a camera alert, you can create a scénario and select the command of your new equipment in the **Event** field.
 
