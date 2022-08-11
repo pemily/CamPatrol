@@ -1,4 +1,4 @@
-# ![CamPatrom Icon](camPatrol_icon-50.png) Changelog Plugin CamPatrol
+# ![CamPatrol Icon](../images/camPatrol_icon-50.png) Changelog Plugin CamPatrol
 
 >**IMPORTANT**
 >

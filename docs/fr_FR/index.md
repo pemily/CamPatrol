@@ -1,4 +1,4 @@
-# ![CamPatrom Icon](camPatrol_icon-50.png) Plugin CamPatrol
+# ![CamPatrom Icon](../images/camPatrol_icon-50.png) Plugin CamPatrol
 
 ## 1) Description
 
@@ -20,7 +20,7 @@ Dans la configuration de votre caméra, vous devez choisir comment elle doit ré
     - Envoyer par mail
     - Envoyer par FTP
     - **Mais vous n'avez jamais "Alerter" Jeedom** 
-        - ![Pleure](cry-32.png)
+        - ![Pleure](../images/cry-32.png)
 
 Ce Plugin va vous permettre de déclencher un scénario Jeedom à chaque fois que vous aurez une detection de l'une de vos caméra.
 Vous pourrez alors choisir de
@@ -58,7 +58,7 @@ L'installation du plugin vous demandera de définir
 
 > ___Le nom d'utilisateur et mot de passe sont libres, mais ne doivent pas contenir les caracteres [espace] * ou ?___
 
-![Installation](install.png)
+![Installation](../images/fr_install.png)
 
 ---
 
@@ -76,20 +76,27 @@ Exemples de configuration possible.
   - Port/User Name/Password: Sont les valeurs définies dans la partie installation du plugin
   - Path: mettez le nom que vous souhaitez. Il peut representer le lieu que vous surveillez
   - Passive Mode: Sans importance
-![FTP Config](DLinkFTPConfig.png)
+   
+    ![FTP Config](../images/DLinkFTPConfig.png)
 - Configuration de la detection de présence
-![Presence Detection Config](DLinkMotionDetectionConfig.png)
+
+  ![Presence Detection Config](../images/DLinkMotionDetectionConfig.png)
 - Configuration de la detection audio (Optionel)
-![Audio Detection Config](DLinkSoundDetectionConfig.png)
+  
+  ![Audio Detection Config](../images/DLinkSoundDetectionConfig.png)
 
 ### **Pour une caméra IPCam**
 - Configuration du serveur FTP
-![FTP Config](IPCamFTPEnable.png)
-![FTP Config](IPCamFTPSettings.png)
+
+  ![FTP Config](../images/fr_IPCamFTPEnable.png)
+  
+  ![FTP Config](../images/fr_IPCamFTPSettings.png)
 - Configuration de la detection de présence
-![Presence Detection Config](IPCamMotionDetection.png)
+  
+  ![Presence Detection Config](../images/fr_IPCamMotionDetection.png)
 - Configuration de la detection audio (Optionel)
-![Audio Detection Config](IPCamSoundDetection.png)
+  
+  ![Audio Detection Config](../images/fr_IPCamSoundDetection.png)
 
 ---
 
@@ -99,21 +106,24 @@ Les caméras sont automatiquement créées à la première détection ou bien au
 
 Si elle n'apparait pas parmis les équipements du plugin, vous pouvez cliquer sur le boutton **Synchronisation** faire apparaitre l'équipement. Si ce n'est pas le cas, vérifiez vos paramêtres de la caméra avec la configuration du plugin.
 
-![Jeedom Equipement](JeedomEquipment.png)
+![Jeedom Equipement](../images/fr_JeedomEquipment.png)
 
 Après avoir été créé, vous pouvez renomer le nom de l'équipement et lui changer les paramêtres classiques de Jeedom.
 
 Pour ne pas surcharger Jeedom, si une caméra se met a envoyer beaucoup d'alertes, il y a une protection avec un temps minimal entre 2 alertes. Par défaut à 60 secondes, mais vous pouvez le changer à votre convenance.
-![Jeedom Equipement Config](JeedomEquipmentConfig.png)
+
+![Jeedom Equipement Config](../images/fr_JeedomEquipmentConfig.png)
 
 L'équipement fournit une seule commande de type information. Cette information contiendra le repertoire et le nom du fichier que votre caméra a envoyé au serveur FTP de jeedom.
-![Jeedom Command](JeedomEquipmentCmd.png)
+
+![Jeedom Command](../images/fr_JeedomEquipmentCmd.png)
 
 ---
 
 ## 8) Création d'un scénario sur détection
 
 Pour executer une action sur une alerte de votre caméra, vous pouvez créer un scénario et sélectionnez dans le champ **Evénement** la commande de votre nouvel équipement.
-![Jeedom Command](ScenarioJeedom.png)
+
+![Jeedom Command](../images/fr_ScenarioJeedom.png)
 
 ---
