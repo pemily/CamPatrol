@@ -2,8 +2,8 @@
 	"id" : "camPatrol",
 	"name" : "CamPatrol",
 	"description" : {
-		"fr_FR": "Plugin permettant d'être alerté lorsqu'une de vos caméras detecte une présence.<br>Beaucoup de caméras incluent une détection de mouvement ou humaine. Le but de se plugin est de s'appuyer sur cette détection et d'être automatiquement notifié dans jeedom lorsqu'il y a une détection.<br>Cela permet de déclencher une commande qui pourra prendre une photo et vous l'envoyer par exemple.<br>Si votre caméra au moment ou elle détecte quelque chose est capable d'enregistrer la séquence sur un site FTP, alors elle est compatible avec ce plugin",
-		"en_US": "TODO"
+		"fr_FR": "Ce plugin permet de recevoir les alertes de vos caméras.<br>Beaucoup de caméras incluent une détection de mouvement, humaine ou de son. Le but de se plugin est de s'appuyer sur cette détection et d'être automatiquement notifié dans Jeedom lorsque la caméra detecte quelque chose.",
+		"en_US": "This plugin is able to receive alerts from your cameras.<br>A lot of camera owns a motion/human/sound detector. The goal of this plugin is to use this detector and be automatically notified in Jeedom when the camera detects something."
 	},
 	"licence" : "AGPL",
 	"author" : "P. Emily",
@@ -11,14 +11,11 @@
 	"category" : "security",
 	"hasDependency" : true,
 	"hasOwnDeamon" : true,
-	"maxDependancyInstallTime" : 5,
-	"changelog" : "https://jeedom.github.io/plugin-template/#language#/changelog",
-	"documentation" : "https://jeedom.github.io/plugin-template/#language#/",
-	"changelog_beta" : "https://jeedom.github.io/plugin-template/#language#/beta/changelog",
-	"documentation_beta" : "https://jeedom.github.io/plugin-template/#language#/beta/",
+	"maxDependancyInstallTime" : 10,
+	"changelog" : "https://pemily.github.io/CamPatrol/#language#/changelog",
+	"documentation" : "https://pemily.github.io/CamPatrol/#language#/",
 	"link" : {
-		"forum":"Lien vers le forum",
-		"video" : "Lien vers une video"
+		"forum":"https://community.jeedom.com/tag/plugin-campatrol"
 	},
 	"language": [
 		"fr_FR",
