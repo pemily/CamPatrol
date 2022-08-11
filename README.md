@@ -1,3 +1,3 @@
 # CamPatrol Plugin pour Jeedom
 
-Plugin permettant de récupérer les detections de vos caméras
+Plugin permettant de récupérer les alertes de vos caméras
