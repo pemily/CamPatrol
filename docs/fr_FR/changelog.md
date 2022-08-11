@@ -1,4 +1,4 @@
-# Changelog plugin CamPatrol
+# ![CamPatrom Icon](camPatrol_icon-50.png) Changelog Plugin CamPatrol
 
 >**IMPORTANT**
 >
@@ -6,4 +6,4 @@
 
 # 10/08/2022
 
-- Début du plugin
+- Première version du plugin

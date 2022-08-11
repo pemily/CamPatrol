@@ -103,7 +103,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-4 control-label">{{Intervalle minimale entre 2 alertes}}</label>
+								<label class="col-sm-4 control-label">{{Temps minimal entre 2 alertes}}</label>
 								<div class="col-sm-2">									
 								<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="alertInterval" placeholder="60"/>																	
 								</div>								

@@ -1,18 +1,119 @@
-# Plugin CamPatrol
+# ![CamPatrom Icon](camPatrol_icon-50.png) Plugin CamPatrol
 
-TODO Ce "template de plugin" sert de base à la réalisation de plugins pour **Jeedom**.
+## 1) Description
 
-La documentation générale relative à la conception de plugin est consultable [ici](https://doc.jeedom.com/fr_FR/dev/).
+Plugin permettant à jeedom de réagir lorsque l'une de vos caméras détecte une présence.
 
-Dans le détail :   
-* [Utilisation du template de plugin](https://doc.jeedom.com/fr_FR/dev/plugin_template) : Le template de plugin est une base de plugin pour Jeedom qui doit être adaptée avec l'id de votre plugin et à laquelle il suffit d'ajouter vos propres fonctions.
+---
 
-* [Fichier info.json](https://doc.jeedom.com/fr_FR/dev/structure_info_json) : Intégré depuis la version 3.0 de Jeedom, le fichier **info.json** est obligatoire pour le bon fonctionnement des plugins et leur bon déploiement sur le Market Jeedom.
+## 2) Principe
 
-* [Icône du plugin](https://doc.jeedom.com/fr_FR/dev/Icone_de_plugin) : Afin de pouvoir être publié sur le Market Jeedom, tout plugin doit disposer d’une icône. Attention à ne pas utiliser le même code couleur que les icônes des plugins Jeedom officiels.
+De nombreuse caméras propose de faire de la détection. Elles peuvent utiliser différents procédés
+* Une analyse d'image basé sur un % de pixel ayant changé
+* Une détection humaine en s'appuyant sur de l'intelligence artificielle
+* Une détection sonore au delà d'un certain seuil configurable
 
-* [Widget du plugin](https://doc.jeedom.com/fr_FR/dev/widget_plugin) : Présentation des différentes manières d'inclure des widgets personnalisés au plugin.
+Dans la configuration de votre caméra, vous devez choisir comment elle doit réagir lorsqu'elle fait une détection:
+1) Prendre une/plusieurs photo(s) (avec un interval de temps) ou bien de faire une vidéo pendant un laps de temps.
+2) Sous quel forme elle conservera/enverra la photo/video. En général vous avez les options suivantes
+    - Stocker sur sa carte SD
+    - Envoyer par mail
+    - Envoyer par FTP
+    - **Mais vous n'avez jamais "Alerter" Jeedom** 
+        - ![Pleure](cry-32.png)
 
-* [Documentation du plugin](https://doc.jeedom.com/fr_FR/dev/documentation_plugin) : Présentation de la mise en place d'une documentation car un bon plugin n'est rien sans documentation adéquate.
+Ce Plugin va vous permettre de déclencher un scénario Jeedom à chaque fois que vous aurez une detection de l'une de vos caméra.
+Vous pourrez alors choisir de
+- Déclencher votre alarme
+- Démarrer l'enregistrement avec le [plugin Caméra de jeedom](https://doc.jeedom.com/fr_FR/plugins/security/camera)
+- Recevoir une notification avec une [capture](https://doc.jeedom.com/fr_FR/plugins/security/camera/?theme=dark#Enregistrement%20et%20envoi%20de%20capture)
+- Fermer vos volets
+- ou n'importe quel autre action Jeedom
 
-* [Publication du plugin](https://doc.jeedom.com/fr_FR/dev/publication_plugin) : Description des pré-requis indispensables à la publication du plugin.
+> ___Toutes les informations nécéssaire au plugin restent locale dans votre réseaux, rien n'est envoyé sur internet.___
+
+---
+
+## 3) Caméras compatibles
+
+Toutes les caméras:
+- Qui possédent une détection quelconque (mouvement/humaine/audio).
+- Qui ont la possibilité de faire un envoie par FTP au moment de la détection.
+
+---
+
+## 4) Prérequis
+
+>  Les adresses IP de vos caméras et de Jeedom doivent être **[statique](https://le-routeur-wifi.com/adresse-ip-statique-routeur/).**
+
+---
+
+## 5) Installation
+
+L'installation du plugin vous demandera de définir
+ * Un nom d'utilisateur _(campatrol par défaut)_
+ * Un mot de passe _(campatrol par défaut)_
+ * Le Port FTP utilisé _(21 par défaut)_
+ * L'addressse IP: 0.0.0.0 _(ne pas changer sauf si vous avez des problèmes reseaux, dans ce cas, entrez l'adresse IP locale de votre jeedom)_
+
+> ___Le nom d'utilisateur et mot de passe sont libres, mais ne doivent pas contenir les caracteres [espace] * ou ?___
+
+![Installation](install.png)
+
+---
+
+## 6) Configuration de votre Caméra
+
+Pour chacune de vos caméra, vous devrez configurer le serveur FTP avec les données que vous avez saisie dans Jeedom.
+
+> **Après avoir fait la configuration de la caméra, si vous avez un boutton 'Test', cliquez dessus pour vérifier qu'elle est correcte**
+
+Exemples de configuration possible.
+
+### **Pour une caméra D-Link** 
+- Configuration du serveur FTP
+  - Host Name: Mettre l'adresse IP Local de votre serveur Jeedom
+  - Port/User Name/Password: Sont les valeurs définies dans la partie installation du plugin
+  - Path: mettez le nom que vous souhaitez. Il peut representer le lieu que vous surveillez
+  - Passive Mode: Sans importance
+![FTP Config](DLinkFTPConfig.png)
+- Configuration de la detection de présence
+![Presence Detection Config](DLinkMotionDetectionConfig.png)
+- Configuration de la detection audio (Optionel)
+![Audio Detection Config](DLinkSoundDetectionConfig.png)
+
+### **Pour une caméra IPCam**
+- Configuration du serveur FTP
+![FTP Config](IPCamFTPEnable.png)
+![FTP Config](IPCamFTPSettings.png)
+- Configuration de la detection de présence
+![Presence Detection Config](IPCamMotionDetection.png)
+- Configuration de la detection audio (Optionel)
+![Audio Detection Config](IPCamSoundDetection.png)
+
+---
+
+## 7) Configuration Jeedom
+
+Les caméras sont automatiquement créées à la première détection ou bien au premier test de connection que vous pouvez déclencher dans la partie configuration de la caméra.
+
+Si elle n'apparait pas parmis les équipements du plugin, vous pouvez cliquer sur le boutton **Synchronisation** faire apparaitre l'équipement. Si ce n'est pas le cas, vérifiez vos paramêtres de la caméra avec la configuration du plugin.
+
+![Jeedom Equipement](JeedomEquipment.png)
+
+Après avoir été créé, vous pouvez renomer le nom de l'équipement et lui changer les paramêtres classiques de Jeedom.
+
+Pour ne pas surcharger Jeedom, si une caméra se met a envoyer beaucoup d'alertes, il y a une protection avec un temps minimal entre 2 alertes. Par défaut à 60 secondes, mais vous pouvez le changer à votre convenance.
+![Jeedom Equipement Config](JeedomEquipmentConfig.png)
+
+L'équipement fournit une seule commande de type information. Cette information contiendra le repertoire et le nom du fichier que votre caméra a envoyé au serveur FTP de jeedom.
+![Jeedom Command](JeedomEquipmentCmd.png)
+
+---
+
+## 8) Création d'un scénario sur détection
+
+Pour executer une action sur une alerte de votre caméra, vous pouvez créer un scénario et sélectionnez dans le champ **Evénement** la commande de votre nouvel équipement.
+![Jeedom Command](ScenarioJeedom.png)
+
+---
