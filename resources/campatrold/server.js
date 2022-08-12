@@ -175,7 +175,7 @@ function updateAttributeWithValue(equipmentId, attributeName, attributeNewValue)
 }
 
 function getEquipement(clientIP){
-    log.debug("Get all equipments");
+    log.debug("Get all equipments of "+args.pluginId);
     return executeApiCmd(JEEDOM_URL, {
         "jsonrpc": "2.0",        
         "method": "eqLogic::all",
@@ -187,7 +187,7 @@ function getEquipement(clientIP){
     .then((response, reject) =>{        
         if (reject === undefined){
             log.debug("Search equipment with IP: "+clientIP);
-            
+            log.error(response);
             var eqFound = undefined;
             JSON.parse(response).result.forEach(eq => { 
                 if (eq.logicalId === clientIP){
@@ -347,7 +347,7 @@ class MyAlerterFileSystem extends FileSystem{
         
         // if we already have the interval time for this client IP
         // we can check and avoir a call to the getOrCreateEquipment
-        if (isTooEarly(ip2IntervalTime[this.clientIP])){            
+        if (this.isTooEarly(ip2IntervalTime[this.clientIP])){            
             return writableNoopStream();
         }
 
@@ -357,9 +357,10 @@ class MyAlerterFileSystem extends FileSystem{
             if (error === undefined){
                 // update the interval time if it changes or not yet in the map
                 ip2IntervalTime[this.clientIP] = equip.configuration.alertInterval;                
-                if (isTooEarly(equip.configuration.alertInterval)){
+                if (this.isTooEarly(equip.configuration.alertInterval)){
                     return undefined;
                 }
+                const currentTime = Date.now();
                 ip2lastAlertTime[this.clientIP]=currentTime;
                 return updateAttributeWithValue(equip.id, "Alert", this.current_dir + fileName);    
             }

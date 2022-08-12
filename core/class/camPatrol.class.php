@@ -72,7 +72,7 @@ class camPatrol extends eqLogic {
 
 public static function deamon_start($_debug = false) {
   self::deamon_stop();
-  
+    
   log::add(__CLASS__, 'info', __('Démarrage du serveur FTP', __FILE__));
 
   $deamon_info = self::deamon_info();
@@ -82,7 +82,7 @@ public static function deamon_start($_debug = false) {
 
   
   $plugin = plugin::byId(__CLASS__);
-  $apiKey = config::byKey('api', __CLASS__); 
+  $apiKey = config::byKey('api', $plugin->getName());   
   $user = config::byKey('server_username', __CLASS__); 
   $pswd = config::byKey('server_password', __CLASS__); 
   $port = config::byKey('server_port', __CLASS__); 
