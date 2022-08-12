@@ -61,6 +61,9 @@
         "Type": "Type",
         "Visible": "Visible"
     },
+    "plugins\/camPatrol\/plugin_info\/install.php": {
+        "La clé api ne peut pas être générée": "The api key cannot be generated"
+    },
     "plugins\/camPatrol\/plugin_info\/configuration.php": {
         "L'IP FTP:": "FTP IP:",
         "L'adresse IP du server FTP. Ne mettez à jour qu'en cas de problème reseaux.": "The IP address of the FTP server. Don't change it, unless network problem.",

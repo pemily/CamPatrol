@@ -24,7 +24,7 @@ function camPatrol_install() {
     config::save('api', config::genKey(), $pluginId);
     $apiKey = jeedom::getApiKey($pluginId);
     if ($apiKey == ''){		
-        log::add($pluginId.'_install', 'error', __("Erreur : La clé api ne peut pas être générée", __FILE__));	
+        log::add($pluginId.'_install', 'error', __("La clé api ne peut pas être générée", __FILE__));	
     }
 }
 
