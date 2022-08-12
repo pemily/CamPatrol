@@ -32,12 +32,13 @@ export function write_pid(_file){
 }
 
 /***************************LOGS*******************************/
-
+function getLogTime(){
+  return '['+(new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''))+']';
+}
 
 export class JeedomLog {    
 
-  constructor(_logOuputFile, _level){      
-      this.logFile = _logOuputFile;   
+  constructor(_level){            
       var convert = {debug  : 0,info : 10,notice : 20,warning : 30,error : 40,critical : 50,none : 60}
       this.level = convert[_level]    
   }
@@ -46,21 +47,21 @@ export class JeedomLog {
     if(this.level > 0){
       return;
     }
-    fs.appendFileSync(this.logFile, '['+(new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''))+'][DEBUG] : '+_log+'\r\n');
+    console.log(getLogTime()+'[DEBUG] : '+_log+'\r\n');
   }
 
   info(_log){
     if(this.level > 10){
       return;
     }
-    fs.appendFileSync(this.logFile, '['+(new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''))+'][INFO] : '+_log+'\r\n')
+    console.log(getLogTime()+'[INFO] : '+_log+'\r\n');
   }
 
   error(_log){
     if(this.level > 40){
       return;
     }
-    fs.appendFileSync(this.logFile, '['+(new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''))+'][ERROR] : '+_log+'\r\n')
+    console.log(getLogTime()+'[ERROR] : '+_log+'\r\n');
   }
 }
 
@@ -77,7 +78,7 @@ export function executeApiCmd(jeedomUrl, payload){
        response.once('end', () => { resolve(data); });       
      });
      req.once('error', err => {
-        console.error("Error in Request ", (err.message || err));
+        console.log(getLogTime()+'[ERROR] : Error in request', (err.message || err));
         reject(err);
      });
      req.write(JSON.stringify(payload));

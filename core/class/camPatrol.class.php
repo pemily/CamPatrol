@@ -19,21 +19,19 @@
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
 class camPatrol extends eqLogic {
-  /*     * *************************Attributs****************************** */
-
-  /*
-  * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
-  * Tableau multidimensionnel - exemple: array('custom' => true, 'custom::layout' => false)
-  public static $_widgetPossibility = array();
-  */
-
-  /*
-  * Permet de crypter/décrypter automatiquement des champs de configuration du plugin
-  * Exemple : "param1" & "param2" seront cryptés mais pas "param3"
-  public static $_encryptConfigKey = array('param1', 'param2');
-  */
 
   /*     * ***********************Methode static*************************** */
+	public static function dependancy_info() {
+		$return = array();
+		$return['log'] = __CLASS__;
+		$return['progress_file'] = jeedom::getTmpFolder(__CLASS__) . '/dependance';
+		$return['state'] = 'ok';
+		if (exec('which node | wc -l') == 0) {
+			$return['state'] = 'nok';
+		}
+		return $return;
+	}
+
 
   public static function deamon_info() {      
     $return = array();
@@ -48,10 +46,14 @@ class camPatrol extends eqLogic {
         }
     }
     $return['launchable'] = 'ok';
-    $user = config::byKey('server_username', __CLASS__); 
-    $pswd = config::byKey('server_password', __CLASS__); 
-    $port = config::byKey('server_port', __CLASS__); 
-    $ip = config::byKey('server_ip', __CLASS__);     
+
+    $plugin = plugin::byId(__CLASS__);
+    $pluginId = $plugin->getId();
+
+    $user = config::byKey('server_username', $pluginId); 
+    $pswd = config::byKey('server_password', $pluginId); 
+    $port = config::byKey('server_port', $pluginId); 
+    $ip = config::byKey('server_ip', $pluginId);     
     if ($user == '') {
         $return['launchable'] = 'nok';
         $return['launchable_message'] = __("Le nom d'utilisateur n'est pas configuré", __FILE__);
@@ -71,33 +73,48 @@ class camPatrol extends eqLogic {
 
 
 public static function deamon_start($_debug = false) {
+  $dependancy_info = self::dependancy_info();
+  if ($dependancy_info['state' != 'ok']) {
+    log::add(__CLASS__, 'error', __("Veuillez vérifier les dépendances", __FILE__));
+    return;
+  }
+	
+  if (! jeedom::isCapable('sudo')) {		
+    log::add(__CLASS__, 'error',__("Erreur : Veuillez donner les droits sudo à Jeedom", __FILE__));
+    return;
+  }
+
   self::deamon_stop();
     
   log::add(__CLASS__, 'info', __('Démarrage du serveur FTP', __FILE__));
 
   $deamon_info = self::deamon_info();
   if ($deamon_info['launchable'] != 'ok') {
-    throw new Exception(__("Veuillez vérifier la configuration", __FILE__));
+    log::add(__CLASS__, 'error', __("Veuillez vérifier la configuration", __FILE__));
+    return;
   }
 
+  $pluginId = __CLASS__;
+  $apiKey = config::byKey('api', $pluginId);   
+  if ($apiKey == ''){
+    log::add(__CLASS__, 'error', __("la clé api n'a pas pu être récupéré", __FILE__));
+    return;
+  }
   
-  $plugin = plugin::byId(__CLASS__);
-  $apiKey = config::byKey('api', $plugin->getName());   
-  $user = config::byKey('server_username', __CLASS__); 
-  $pswd = config::byKey('server_password', __CLASS__); 
-  $port = config::byKey('server_port', __CLASS__); 
-  $ip = config::byKey('server_ip', __CLASS__);  
+  $user = config::byKey('server_username', $pluginId); 
+  $pswd = config::byKey('server_password', $pluginId); 
+  $port = config::byKey('server_port', $pluginId); 
+  $ip = config::byKey('server_ip', $pluginId);  
 
   $cmd = 'node ' . __DIR__ . '/../../resources/campatrold/server.js';
   $cmd .= ' --port=' . $port;
   $cmd .= ' --user=' . $user;
   $cmd .= ' --pwd=' . $pswd;
   $cmd .= ' --ip=' . $ip;
-  $cmd .= ' --pluginId=' . __CLASS__;
+  $cmd .= ' --pluginId=' . $pluginId;
   $cmd .= ' --apikey=' . $apiKey;  
   $cmd .= ' --pidFile=' . jeedom::getTmpFolder(__CLASS__) . '/daemon.pid';
-  $cmd .= ' --logLevel=' . log::convertLogLevel(log::getLogLevel(__CLASS__));  
-  $cmd .= ' --log=' . log::getPathToLog(__CLASS__);
+  $cmd .= ' --logLevel=' . log::convertLogLevel(log::getLogLevel(__CLASS__));    
   log::add(__CLASS__, 'debug', __("Commande lancée: ", __FILE__) . $cmd);
 
   shell_exec(system::getCmdSudo() . $cmd . ' >> ' . log::getPathToLog(__CLASS__) . ' 2>&1 &');
@@ -117,136 +134,12 @@ public static function deamon_stop() {
   sleep(2);
 }
 
-
-  /*
-  * Fonction exécutée automatiquement toutes les minutes par Jeedom
-  public static function cron() {}
-  */
-
-  /*
-  * Fonction exécutée automatiquement toutes les 5 minutes par Jeedom
-  public static function cron5() {}
-  */
-
-  /*
-  * Fonction exécutée automatiquement toutes les 10 minutes par Jeedom
-  public static function cron10() {}
-  */
-
-  /*
-  * Fonction exécutée automatiquement toutes les 15 minutes par Jeedom
-  public static function cron15() {}
-  */
-
-  /*
-  * Fonction exécutée automatiquement toutes les 30 minutes par Jeedom
-  public static function cron30() {}
-  */
-
-  /*
-  * Fonction exécutée automatiquement toutes les heures par Jeedom
-  public static function cronHourly() {}
-  */
-
-  /*
-  * Fonction exécutée automatiquement tous les jours par Jeedom
-  public static function cronDaily() {}
-  */
-
-  /*     * *********************Méthodes d'instance************************* */
-
-  // Fonction exécutée automatiquement avant la création de l'équipement
-  public function preInsert() {
-  }
-
-  // Fonction exécutée automatiquement après la création de l'équipement
-  public function postInsert() { 
-  }
-
-  // Fonction exécutée automatiquement avant la mise à jour de l'équipement
-  public function preUpdate() {
-  }
-
-  // Fonction exécutée automatiquement après la mise à jour de l'équipement
-  public function postUpdate() {
-  }
-
-  // Fonction exécutée automatiquement avant la sauvegarde (création ou mise à jour) de l'équipement
-  public function preSave() {
-  }
-
-  // Fonction exécutée automatiquement après la sauvegarde (création ou mise à jour) de l'équipement
-  public function postSave() {
-  }
-
-  // Fonction exécutée automatiquement avant la suppression de l'équipement
-  public function preRemove() {
-  }
-
-  // Fonction exécutée automatiquement après la suppression de l'équipement
-  public function postRemove() {
-  }
-
-  /*
-  * Permet de crypter/décrypter automatiquement des champs de configuration des équipements
-  * Exemple avec le champ "Mot de passe" (password)
-  public function decrypt() {
-    $this->setConfiguration('password', utils::decrypt($this->getConfiguration('password')));
-  }
-  public function encrypt() {
-    $this->setConfiguration('password', utils::encrypt($this->getConfiguration('password')));
-  }
-  */
-
-  /*
-  * Permet de modifier l'affichage du widget (également utilisable par les commandes)
-  public function toHtml($_version = 'dashboard') {}
-  */
-
-  /*
-  * Permet de déclencher une action avant modification d'une variable de configuration du plugin
-  * Exemple avec la variable "param3"
-  public static function preConfig_param3( $value ) {
-    // do some checks or modify on $value
-    return $value;
-  }
-  */
-
-  /*
-  * Permet de déclencher une action après modification d'une variable de configuration du plugin
-  * Exemple avec la variable "param3"
-  public static function postConfig_param3($value) {
-    // no return value
-  }
-  */
-
-  /*     * **********************Getteur Setteur*************************** */
-
 }
 
 class camPatrolCmd extends cmd {
-  /*     * *************************Attributs****************************** */
-
-  /*
-  public static $_widgetPossibility = array();
-  */
- 
-  /*     * ***********************Methode static*************************** */
-
-
-  /*     * *********************Methode d'instance************************* */
-
-  /*
-  * Permet d'empêcher la suppression des commandes même si elles ne sont pas dans la nouvelle configuration de l'équipement envoyé en JS  
-  public function dontRemoveCmd() {
-    return true;
-  }
-  */
 
   // Exécution d'une commande
   public function execute($_options = array()) {
   }
-
-  /*     * **********************Getteur Setteur*************************** */
 
 }

@@ -11,50 +11,43 @@ var ip2lastAlertTime = {};
 var ip2IntervalTime = {};
 
 const args = argsParser(process.argv);
-if (args.log === undefined){
-    console.log("log argument is missing");
-}
 if (args.logLevel === undefined){
     console.log("logLevel argument is missing");    
 }
 
-const log = new JeedomLog(args.log, args.logLevel);
+const log = new JeedomLog(args.logLevel);
 
 
-log.info("Server started with: "+process.argv);
+log.info("Server started");
 
-function usage(){
-    log.info("node server.js --pidFile=/tmp/jeedom/camPatrol/daemon.pid --port=8090 --user=campat --pwd=campat --apikey=XXXXXXX --ip=0.0.0.0 --logLevel=debug");    
-    process.exit(1);
-}
 
 if (args.port === undefined){
     log.error("port argument is missing");    
-    usage();
+    process.exit(1);
 }
 if (args.user === undefined){
     log.error("user argument is missing");
-    usage();
+    process.exit(1);
 }
 if (args.pwd === undefined){
     log.error("pwd argument is missing");
-    usage();
+    process.exit(1);
 }
 if (args.ip === undefined){
     log.error("ip argument is missing");
-    usage();
+    process.exit(1);
 }
 if (args.pidFile === undefined){
     log.error("pidFile argument is missing");
-    usage();
+    process.exit(1);
 }
 if (args.apikey === undefined){
     log.error("apikey argument is missing");
-    usage();
+    process.exit(1);
 }
 if (args.pluginId === undefined){
     log.error("pluginId argument is missing");
-    usage();
+    process.exit(1);
 }
 
 write_pid(args.pidFile);
@@ -186,8 +179,7 @@ function getEquipement(clientIP){
     })
     .then((response, reject) =>{        
         if (reject === undefined){
-            log.debug("Search equipment with IP: "+clientIP);
-            log.error(response);
+            log.debug("Search equipment with IP: "+clientIP);            
             var eqFound = undefined;
             JSON.parse(response).result.forEach(eq => { 
                 if (eq.logicalId === clientIP){
@@ -346,7 +338,7 @@ class MyAlerterFileSystem extends FileSystem{
         log.info("Received new file " + this.current_dir + fileName + " from ip=" + this.clientIP);      
         
         // if we already have the interval time for this client IP
-        // we can check and avoir a call to the getOrCreateEquipment
+        // we can check and avoir a call to the getOrCreateEquipment        
         if (this.isTooEarly(ip2IntervalTime[this.clientIP])){            
             return writableNoopStream();
         }

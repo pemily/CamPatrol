@@ -8,7 +8,10 @@
         "Le nom d'utilisateur n'est pas configuré": "Le nom d'utilisateur n'est pas configuré",
         "Le port n'est pas configuré": "Le port n'est pas configuré",
         "Stop le FTP Serveur": "Stop le FTP Serveur",
-        "Veuillez vérifier la configuration": "Veuillez vérifier la configuration"
+        "Veuillez vérifier la configuration": "Veuillez vérifier la configuration",
+        "Veuillez vérifier les dépendances": "Veuillez vérifier les dépendances",
+        "Erreur : Veuillez donner les droits sudo à Jeedom": "Erreur : Veuillez donner les droits sudo à Jeedom",
+        "la clé api n'a pas pu être récupéré": "la clé api n'a pas pu être récupéré"
     },
     "plugins\/camPatrol\/desktop\/js\/camPatrol.js": {
         "Afficher": "Afficher",
