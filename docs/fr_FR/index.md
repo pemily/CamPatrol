@@ -130,3 +130,4 @@ Pour executer une action sur une alerte de votre caméra, vous pouvez créer un 
 
 ![Jeedom Command](../images/fr_ScenarioJeedom.png)
 
+Si vous avez plusieurs caméras, vous pouvez les ajouter dans la liste des déclencheurs, puis dans le scénario vous pouvez les distinguer avec un bloc Si/Alors/Sinon et la valeur dans le Si est: trigger(#[Maison][Camera Parking][Alerte]#)

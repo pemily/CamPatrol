@@ -128,3 +128,6 @@ Create a scenario on a detection
 To execute an action on a camera alert, you can create a scénario and select the command of your new equipment in the **Event** field.
 
 ![Jeedom Command](../images/en_ScenarioJeedom.png)
+
+If you have multiple cameras, you can add them in the trigger list, 
+Si vous avez plusieurs caméras, vous pouvez les ajouter dans la liste des déclencheurs, then in the scenario you can distinguish them with a If/Then/Else block. The value to put in the If is: trigger(#[Maison][Camera Parking][Alerte]#)
