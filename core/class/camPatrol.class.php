@@ -100,7 +100,11 @@ public static function deamon_start($_debug = false) {
     log::add(__CLASS__, 'error', __("la clé api n'a pas pu être récupéré", __FILE__));
     return;
   }
-  
+
+  // log node version
+  shell_exec(system::getCmdSudo() . 'echo "node version:" >> ' . log::getPathToLog(__CLASS__) . ' 2>&1 &');
+  shell_exec(system::getCmdSudo() . 'node -v >> ' . log::getPathToLog(__CLASS__) . ' 2>&1 &');
+
   $user = config::byKey('server_username', $pluginId); 
   $pswd = config::byKey('server_password', $pluginId); 
   $port = config::byKey('server_port', $pluginId); 
