@@ -6,7 +6,7 @@ const { Netmask } = require('netmask');
 const { Readable, Writable } = require('stream');
 const { JeedomLog, write_pid, executeApiCmd } = require('./jeedom.js');
 
-const JEEDOM_URL="http://localhost/core/api/jeeApi.php";
+const JEEDOM_CALLBACK_URL="http://127.0.0.1/core/api/jeeApi.php";
 
 var ip2lastAlertTime = {};
 var ip2IntervalTime = {};
@@ -125,7 +125,7 @@ ftpServer.listen().then(() => {
 // function for the jeedom equipment
 function updateAttributeWithValue(equipmentId, attributeName, attributeNewValue){   
     log.debug("Search the command info to update for equipment Id: "+ equipmentId); 
-    return executeApiCmd(JEEDOM_URL, {
+    return executeApiCmd(JEEDOM_CALLBACK_URL, {
         "jsonrpc": "2.0",        
         "method": "eqLogic::fullById",
         "params": {
@@ -152,7 +152,7 @@ function updateAttributeWithValue(equipmentId, attributeName, attributeNewValue)
             }
             else{                
                 log.debug("Update "+attributeName+" command ID: "+ cmdToUpdt.id +"  with: "+ attributeNewValue);                 
-                return executeApiCmd(JEEDOM_URL, {
+                return executeApiCmd(JEEDOM_CALLBACK_URL, {
                     "jsonrpc": "2.0",        
                     "method": "cmd::event",
                     "params": {
@@ -170,7 +170,7 @@ function updateAttributeWithValue(equipmentId, attributeName, attributeNewValue)
 
 function getEquipement(clientIP){
     log.debug("Get all equipments of "+args.pluginId);
-    return executeApiCmd(JEEDOM_URL, {
+    return executeApiCmd(JEEDOM_CALLBACK_URL, {
         "jsonrpc": "2.0",        
         "method": "eqLogic::all",
         "params": {
@@ -208,7 +208,7 @@ function getOrCreateEquipement(clientIP) {
         if (equip === undefined){
             log.debug("Create equipment with IP: "+ clientIP);
             // crée l'équipement
-            return executeApiCmd(JEEDOM_URL,
+            return executeApiCmd(JEEDOM_CALLBACK_URL,
                 {
                     "jsonrpc": "2.0",    
                     "method": "eqLogic::save",
@@ -327,7 +327,7 @@ class MyAlerterFileSystem extends FileSystem{
             if (lastTime !== undefined){
                 const diffInSeconds = Math.floor((currentTime - lastTime)/1000);                     
                 if (diffInSeconds < alertInterval){
-                    log.info("Alert not sent from ip="+this.clientIP+" since the last one was less than "+diffInSeconds+" seconds");
+                    log.info("Alert not sent from ip="+this.clientIP+" since the last one was less than "+alertInterval+" seconds");
                     return true;
                 }
             }
@@ -341,7 +341,7 @@ class MyAlerterFileSystem extends FileSystem{
         // if we already have the interval time for this client IP
         // we can check and avoir a call to the getOrCreateEquipment        
         if (this.isTooEarly(ip2IntervalTime[this.clientIP])){            
-            return noOpWritable();
+            return this.noOpWritable();
         }
 
         
@@ -372,7 +372,7 @@ class MyAlerterFileSystem extends FileSystem{
         })
         .catch(e => log.error(e));
 
-        return noOpWritable();
+        return this.noOpWritable();
     }
 
 
