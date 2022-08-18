@@ -14,29 +14,29 @@
 * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import fs from 'fs';
-import http from 'http';
+const fs = require('fs');
+const http = require('http');
 
 var Jeedom = {}
 Jeedom.log = {}
 
 /***************************PID*******************************/
 
-export function write_pid(_file){  
+exports.write_pid = function(_file){  
   fs.writeFile(_file, process.pid.toString(), function(err) {
     if(err) {
       Jeedom.log.error("Can't write pid file : "+err);
       process.exit()
     }
   });
-}
+};
 
 /***************************LOGS*******************************/
 function getLogTime(){
   return '['+(new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''))+']';
 }
 
-export class JeedomLog {    
+exports.JeedomLog = class {    
 
   constructor(_level){            
       var convert = {debug  : 0,info : 10,notice : 20,warning : 30,error : 40,critical : 50,none : 60}
@@ -63,11 +63,11 @@ export class JeedomLog {
     }
     console.log(getLogTime()+'[ERROR] : '+_log+'\r\n');
   }
-}
+};
 
 /***************************COM*******************************/
 
-export function executeApiCmd(jeedomUrl, payload){ 
+exports.executeApiCmd =  function(jeedomUrl, payload){ 
   return new Promise((resolve, reject) => {
     const req = http.request(
       jeedomUrl,
@@ -84,4 +84,4 @@ export function executeApiCmd(jeedomUrl, payload){
      req.write(JSON.stringify(payload));
      req.end();  
   });
-}
+};

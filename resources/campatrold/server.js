@@ -1,16 +1,17 @@
-import { FtpSrv, FileSystem } from 'ftp-srv'; // https://github.com/QuorumDMS/ftp-srv
-import { readableNoopStream, writableNoopStream} from 'noop-stream';
-import argsParser from 'args-parser';
-import { networkInterfaces } from 'os';
-import { Netmask } from 'netmask';
-import { JeedomLog, write_pid, executeApiCmd } from './jeedom.mjs';
+// https://github.com/QuorumDMS/ftp-srv
+const {FtpSrv, FileSystem} = require('ftp-srv');
+const args = require('args-parser')(process.argv);
+const { networkInterfaces } = require('os');
+const { Netmask } = require('netmask');
+const { Readable, Writable } = require('stream');
+const { JeedomLog, write_pid, executeApiCmd } = require('./jeedom.js');
 
 const JEEDOM_URL="http://localhost/core/api/jeeApi.php";
 
 var ip2lastAlertTime = {};
 var ip2IntervalTime = {};
 
-const args = argsParser(process.argv);
+
 if (args.logLevel === undefined){
     console.log("logLevel argument is missing");    
 }
@@ -340,7 +341,7 @@ class MyAlerterFileSystem extends FileSystem{
         // if we already have the interval time for this client IP
         // we can check and avoir a call to the getOrCreateEquipment        
         if (this.isTooEarly(ip2IntervalTime[this.clientIP])){            
-            return writableNoopStream();
+            return noOpWritable();
         }
 
         
@@ -371,12 +372,13 @@ class MyAlerterFileSystem extends FileSystem{
         })
         .catch(e => log.error(e));
 
-        return writableNoopStream();
+        return noOpWritable();
     }
+
 
     read(fileName){        
         log.debug("FTPSrv read "+fileName);
-        return readableNoopStream({size: 10});
+        return Readable.from(['camPatrol plugin file']);        
     }
 
     delete(path) {        
@@ -398,6 +400,14 @@ class MyAlerterFileSystem extends FileSystem{
     getUniqueName(){        
         log.debug("FTPSrv getUniqueName");     
         return "tmp";
+    }
+
+    noOpWritable(){
+        return new Writable({           
+            write(chunk, encding, callback) {
+                setImmediate(callback);
+            },
+        });
     }
   
 }
