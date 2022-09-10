@@ -68,7 +68,7 @@ exports.JeedomLog = class {
 /***************************COM*******************************/
 
 exports.executeApiCmd =  function(jeedomUrl, payload){ 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {    
     const req = http.request(
       jeedomUrl,
       { method: 'POST' },

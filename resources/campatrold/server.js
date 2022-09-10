@@ -101,9 +101,10 @@ ftpServer.on('login', (data, resolve, reject) => {
     }
      
     if(data.username === args.user && data.password === args.pwd){
-        log.debug("Connection successful ");
+        log.debug("Connection successful from "+ip);
         return resolve({ fs: new MyAlerterFileSystem(ip)});
     }
+    log.warn("Invalid user/password from "+ip);
     return reject({
          name: "401",
          message: "Invalid username or password",
@@ -124,7 +125,7 @@ ftpServer.listen().then(() => {
 
 // function for the jeedom equipment
 function updateAttributeWithValue(equipmentId, attributeName, attributeNewValue){   
-    log.debug("Search the command info to update for equipment Id: "+ equipmentId); 
+    log.debug("Asking the details of equipment Id: "+ equipmentId); 
     return executeApiCmd(JEEDOM_CALLBACK_URL, {
         "jsonrpc": "2.0",        
         "method": "eqLogic::fullById",
@@ -141,9 +142,11 @@ function updateAttributeWithValue(equipmentId, attributeName, attributeNewValue)
         }
         else {     
             var cmdToUpdt = undefined;       
+            log.debug("Searching the command info to update for equipment Id: "+ equipmentId);     
             JSON.parse(response).result.cmds.forEach(cmd => {                
                 if (cmd.logicalId === attributeName) {
                     cmdToUpdt = cmd;
+                    log.debug("Command found for equipment Id: "+ equipmentId);
                 }
             });
             if (cmdToUpdt === undefined){
