@@ -6,7 +6,6 @@ const { Netmask } = require('netmask');
 const { Readable, Writable } = require('stream');
 const { JeedomLog, write_pid, executeApiCmd } = require('./jeedom.js');
 const fs = require('fs');
-const findRemoveSync = require('find-remove')
 
 const JEEDOM_CALLBACK_URL="http://127.0.0.1/core/api/jeeApi.php";
 
@@ -393,21 +392,21 @@ class MyAlerterFileSystem extends FileSystem{
                 });
                 
                 log.debug("Deleting old files");
-                findRemoveSync(OUTPUT_FILE_DIR+this.clientIP, {
+               /* findRemoveSync(OUTPUT_FILE_DIR+this.clientIP, {
                     age: { seconds: equip.configuration?.filesMaxAge },
                     files: "*.*",
                     dir: "*"
-                });                
+                });          */      
 
                 return writeStream;
             }
             else {
                 log.debug("No file to store");
                 this.updateAlert(equip.id, this.current_dir + fileName);                
-                findRemoveSync(outDir, {                    
+               /* findRemoveSync(outDir, {                    
                     dir: '*', 
                     files: '*.*' 
-                });
+                });*/
                 return this.noOpWritable();
             }
         }
