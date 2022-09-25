@@ -110,6 +110,13 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<label class="col-sm-4">{{Secondes}}</label>
 							</div>							
 							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Supprimer les fichiers après}}</label>
+								<div class="col-sm-2">									
+								<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="filesMaxAge" placeholder="0"/>																	
+								</div>								
+								<label class="col-sm-4">{{Secondes}}</label>
+							</div>								
+							<div class="form-group">
 								<label class="col-sm-4 control-label" >{{Objet parent}}</label>
 								<div class="col-sm-6">
 									<select id="sel_object" class="eqLogicAttr form-control" data-l1key="object_id">

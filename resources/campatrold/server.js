@@ -5,6 +5,8 @@ const { networkInterfaces } = require('os');
 const { Netmask } = require('netmask');
 const { Readable, Writable } = require('stream');
 const { JeedomLog, write_pid, executeApiCmd } = require('./jeedom.js');
+const fs = require('fs');
+const findRemoveSync = require('find-remove')
 
 const JEEDOM_CALLBACK_URL="http://127.0.0.1/core/api/jeeApi.php";
 
@@ -50,6 +52,13 @@ if (args.pluginId === undefined){
     log.error("pluginId argument is missing");
     process.exit(1);
 }
+if (args.alertsDir === undefined){
+    log.error("alertsDir argument is missing");
+    process.exit(1);
+}
+
+const OUTPUT_FILE_DIR=args.alertsDir+"/";
+
 
 write_pid(args.pidFile);
 
@@ -225,7 +234,8 @@ function getOrCreateEquipement(clientIP) {
                         "isVisible": "0",
                         "isEnable": "1",
                         "configuration" : { 
-                            "alertInterval": 60 
+                            "alertInterval": 60,
+                            "nbSavedFiles": 0
                         },
                         "cmd": 
                             [
@@ -335,33 +345,77 @@ class MyAlerterFileSystem extends FileSystem{
         return false;
     }
 
-    write(fileName){        
-        log.info("Received new file " + this.current_dir + fileName + " from ip=" + this.clientIP);      
-        
+    async write(fileName){        
+        log.info("Received new file " + this.current_dir + fileName + " from ip=" + this.clientIP);              
+
         // if we already have the interval time for this client IP
         // we can check and avoir a call to the getOrCreateEquipment        
         if (this.isTooEarly(ip2IntervalTime[this.clientIP])){            
             return this.noOpWritable();
         }
 
-        
-        getOrCreateEquipement(this.clientIP)
-        .then((equip, error) => {
-            if (error === undefined){
-                // update the interval time if it changes or not yet in the map
-                ip2IntervalTime[this.clientIP] = equip.configuration.alertInterval;                
-                if (this.isTooEarly(equip.configuration.alertInterval)){
-                    return undefined;
-                }
-                const currentTime = Date.now();
-                ip2lastAlertTime[this.clientIP]=currentTime;
-                return updateAttributeWithValue(equip.id, "Alert", this.current_dir + fileName);    
+            
+        var equip = await getOrCreateEquipement(this.clientIP)
+                    .catch(e => log.error("Error when getting equipement "+e));
+                    
+        if (equip !== undefined){
+            // update the interval time if it changes or not yet in the map
+            ip2IntervalTime[this.clientIP] = equip.configuration.alertInterval;                
+            if (this.isTooEarly(equip.configuration.alertInterval)){
+                return this.noOpWritable();
+            }
+            
+            const currentTime = Date.now();
+            ip2lastAlertTime[this.clientIP]=currentTime;
+            
+            var outDir = OUTPUT_FILE_DIR+this.clientIP+"/";
+            
+            log.debug("Delete files after: "+ equip.configuration?.filesMaxAge);
+            if (equip.configuration?.filesMaxAge !== undefined && equip.configuration?.filesMaxAge > 0){
+                log.debug("File needs to be stored and remove files oldest than "+equip.configuration?.filesMaxAge+" seconds");                
+
+                var filePath = outDir+fileName;
+                var downloadUrl = 'core/php/downloadFile.php?pathfile='+encodeURI(filePath);
+                
+                fs.mkdirSync(outDir, { recursive: true });
+                const writeStream = this.writeTo(filePath);
+                writeStream.on('error', (error) => {
+                    log.error("Error when writting file: "+filePath+" send an alert without storing file. "+error);
+                    this.updateAlert(equip.id, downloadUrl);
+                });
+                writeStream.on("finish", () => {
+                    log.debug("File writting is finished: "+filePath);
+                    this.updateAlert(equip.id, downloadUrl);
+                });
+                writeStream.on("end", () => {
+                    log.debug("File writting is ended: "+filePath);
+                    this.updateAlert(equip.id, downloadUrl);
+                });
+                
+                log.debug("Deleting old files");
+                findRemoveSync(OUTPUT_FILE_DIR+this.clientIP, {
+                    age: { seconds: equip.configuration?.filesMaxAge },
+                    files: "*.*",
+                    dir: "*"
+                });                
+
+                return writeStream;
             }
             else {
-                log.error("Error in getOrCreateEquipement"+ error);
-                return undefined;
-            } 
-        })
+                log.debug("No file to store");
+                this.updateAlert(equip.id, this.current_dir + fileName);                
+                findRemoveSync(outDir, {                    
+                    dir: '*', 
+                    files: '*.*' 
+                });
+                return this.noOpWritable();
+            }
+        }
+    }
+
+
+    updateAlert(equipId, filePath){
+        updateAttributeWithValue(equipId, "Alert", filePath)
         .then((result, error) => {
             if (result !== undefined){
                 log.debug("Command updated");
@@ -370,9 +424,7 @@ class MyAlerterFileSystem extends FileSystem{
                 log.error("Error in updateFileUploaded "+ error)
             }
         })
-        .catch(e => log.error(e));
-
-        return this.noOpWritable();
+        .catch(e => log.error(e));   
     }
 
 
@@ -404,11 +456,15 @@ class MyAlerterFileSystem extends FileSystem{
 
     noOpWritable(){
         return new Writable({           
-            write(chunk, encding, callback) {
+            write(chunk, encoding, callback) {
                 setImmediate(callback);
             },
         });
     }
   
+    writeTo(file) {
+        log.debug("Writting file to: "+file+" with fs: "+fs);
+        return fs.createWriteStream(file);
+    }
 }
  

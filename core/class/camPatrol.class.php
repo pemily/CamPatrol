@@ -119,6 +119,7 @@ public static function deamon_start($_debug = false) {
   $cmd .= ' --apikey=' . $apiKey;  
   $cmd .= ' --pidFile=' . jeedom::getTmpFolder(__CLASS__) . '/daemon.pid';
   $cmd .= ' --logLevel=' . log::convertLogLevel(log::getLogLevel(__CLASS__));    
+  $cmd .= ' --alertsDir=' . __DIR__ . '/../../alerts';
   log::add(__CLASS__, 'debug', __("Commande lancée: ", __FILE__) . $cmd);
 
   shell_exec(system::getCmdSudo() . $cmd . ' >> ' . log::getPathToLog(__CLASS__) . ' 2>&1 &');

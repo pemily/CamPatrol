@@ -5,6 +5,15 @@
 >
 >S'il n'y a pas d'information sur la mise à jour, c'est que celle-ci concerne uniquement de la mise à jour de documentation, de traduction ou de texte.
 
+25/09/2022
+==
+
+- Ajout du stockage des fichiers venant de la caméra
+- Création du path pour pouvoir envoyer les urls dans un scénario
+- Configuration de l'équipement pour supprimer les anciens fichiers
+- Mise à jour de la doc
+
+
 10/08/2022
 ==
 
