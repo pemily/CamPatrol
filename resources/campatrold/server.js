@@ -234,7 +234,7 @@ function getOrCreateEquipement(clientIP) {
                         "isEnable": "1",
                         "configuration" : { 
                             "alertInterval": 60,
-                            "nbSavedFiles": 0
+                            "filesMaxAge": 0
                         },
                         "cmd": 
                             [
@@ -374,39 +374,31 @@ class MyAlerterFileSystem extends FileSystem{
                 log.debug("File needs to be stored and remove files oldest than "+equip.configuration?.filesMaxAge+" seconds");                
 
                 var filePath = outDir+fileName;
-                var downloadUrl = 'core/php/downloadFile.php?pathfile='+encodeURI(filePath);
                 
                 fs.mkdirSync(outDir, { recursive: true });
                 const writeStream = this.writeTo(filePath);
                 writeStream.on('error', (error) => {
                     log.error("Error when writting file: "+filePath+" send an alert without storing file. "+error);
-                    this.updateAlert(equip.id, downloadUrl);
+                    this.updateAlert(equip.id, filePath);
                 });
                 writeStream.on("finish", () => {
                     log.debug("File writting is finished: "+filePath);
-                    this.updateAlert(equip.id, downloadUrl);
+                    this.updateAlert(equip.id, filePath);
                 });
                 writeStream.on("end", () => {
                     log.debug("File writting is ended: "+filePath);
-                    this.updateAlert(equip.id, downloadUrl);
+                    this.updateAlert(equip.id, filePath);
                 });
                 
                 log.debug("Deleting old files");
-               /* findRemoveSync(OUTPUT_FILE_DIR+this.clientIP, {
-                    age: { seconds: equip.configuration?.filesMaxAge },
-                    files: "*.*",
-                    dir: "*"
-                });          */      
+                this.deleteOldFiles(outDir, equip.configuration?.filesMaxAge);
 
                 return writeStream;
             }
             else {
                 log.debug("No file to store");
                 this.updateAlert(equip.id, this.current_dir + fileName);                
-               /* findRemoveSync(outDir, {                    
-                    dir: '*', 
-                    files: '*.*' 
-                });*/
+                this.deleteOldFiles(outDir, 0);
                 return this.noOpWritable();
             }
         }
@@ -464,6 +456,20 @@ class MyAlerterFileSystem extends FileSystem{
     writeTo(file) {
         log.debug("Writting file to: "+file+" with fs: "+fs);
         return fs.createWriteStream(file);
+    }
+
+    deleteOldFiles(dir, olderThanInSeconds){        
+        if (fs.existsSync(dir)){
+            var files = fs.readdirSync(dir);
+            var now = new Date().getTime();
+            files.forEach(file => {
+                const filePath = dir + '/' + file;
+                var stat = fs.statSync(filePath);
+                if ((now - stat.ctime.valueOf() ) / 1000 >= olderThanInSeconds){
+                    fs.unlinkSync(filePath);
+                }            
+            });
+        }
     }
 }
  

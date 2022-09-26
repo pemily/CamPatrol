@@ -102,20 +102,28 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<input type="text" class="eqLogicAttr form-control" data-l1key="logicalId" placeholder="IP" readonly/>									
 								</div>
 							</div>
+							<br>
+							<br>
 							<div class="form-group">
-								<label class="col-sm-4 control-label">{{Temps minimal entre 2 alertes}}</label>
+								<label class="col-sm-8 control-label">{{Temps minimal entre 2 alertes}}</label>
 								<div class="col-sm-2">									
 								<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="alertInterval" placeholder="60"/>																	
 								</div>								
-								<label class="col-sm-4">{{Secondes}}</label>
-							</div>							
+								<label class="col-sm-2">{{Secondes}}</label>
+							</div>					
+							<br>		
 							<div class="form-group">
-								<label class="col-sm-4 control-label">{{Supprimer les fichiers après}}</label>
+								<label class="col-sm-8 control-label">{{A l'alerte suivante, supprimer les fichiers si plus vieux de}}</label>
 								<div class="col-sm-2">									
 								<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="filesMaxAge" placeholder="0"/>																	
 								</div>								
-								<label class="col-sm-4">{{Secondes}}</label>
-							</div>								
+								<label class="col-sm-2">{{Secondes}}</label>								
+							</div>	
+							<div class="form-group">								
+								<label class="col-sm-8 control-label">{{(Si 0 alors pas de stockage)}}</label>
+							</div>
+							<br>
+							<br>							
 							<div class="form-group">
 								<label class="col-sm-4 control-label" >{{Objet parent}}</label>
 								<div class="col-sm-6">
