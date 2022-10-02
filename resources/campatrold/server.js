@@ -234,7 +234,7 @@ function getOrCreateEquipement(clientIP) {
                         "isEnable": "1",
                         "configuration" : { 
                             "alertInterval": 60,
-                            "filesMaxAge": 0
+                            "filesMaxAge": 40
                         },
                         "cmd": 
                             [
@@ -367,7 +367,7 @@ class MyAlerterFileSystem extends FileSystem{
             const currentTime = Date.now();
             ip2lastAlertTime[this.clientIP]=currentTime;
             
-            var outDir = OUTPUT_FILE_DIR+this.clientIP+"/";
+            var outDir = OUTPUT_FILE_DIR+equip.id+"/";
             
             log.debug("Delete files after: "+ equip.configuration?.filesMaxAge);
             if (equip.configuration?.filesMaxAge !== undefined && equip.configuration?.filesMaxAge > 0){

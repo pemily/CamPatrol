@@ -9,8 +9,8 @@
 ==
 
 - Add camera file storage
-- Path creation to send file url in a scenario
-- Equipment configuration to delete old files
+- The Alert command contains the camera file path to use it in a scenario
+- Add Equipment parameter to delete old files
 - doc update
 
 

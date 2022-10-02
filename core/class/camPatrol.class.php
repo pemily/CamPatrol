@@ -110,7 +110,7 @@ class camPatrol extends eqLogic {
     $port = config::byKey('server_port', $pluginId); 
     $ip = config::byKey('server_ip', $pluginId);  
 
-    $cmd = 'node ' . __DIR__ . '/../../resources/campatrold/server.js';
+    $cmd = cleanPath('node ' . __DIR__ . '/../../resources/campatrold/server.js');
     $cmd .= ' --port=' . $port;
     $cmd .= ' --user=' . $user;
     $cmd .= ' --pwd=' . $pswd;
@@ -119,7 +119,7 @@ class camPatrol extends eqLogic {
     $cmd .= ' --apikey=' . $apiKey;  
     $cmd .= ' --pidFile=' . jeedom::getTmpFolder(__CLASS__) . '/daemon.pid';
     $cmd .= ' --logLevel=' . log::convertLogLevel(log::getLogLevel(__CLASS__));    
-    $cmd .= ' --alertsDir=' . jeedom::getTmpFolder(__CLASS__) . '/alerts';
+    $cmd .= ' --alertsDir=' . cleanPath(__DIR__ . '/../../data/alerts');
     log::add(__CLASS__, 'debug', __("Commande lancée: ", __FILE__) . $cmd);
 
     shell_exec(system::getCmdSudo() . $cmd . ' >> ' . log::getPathToLog(__CLASS__) . ' 2>&1 &');

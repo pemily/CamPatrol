@@ -9,8 +9,8 @@
 ==
 
 - Ajout du stockage des fichiers venant de la caméra
-- Création du path pour pouvoir envoyer les urls dans un scénario
-- Configuration de l'équipement pour supprimer les anciens fichiers
+- La command Alert contains le chemin du ficher pour pouvoir l'utiliser dans un scénario
+- Ajout d'un paramètre de l'équipement pour supprimer les anciens fichiers
 - Mise à jour de la doc
 
 
