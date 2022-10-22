@@ -296,17 +296,21 @@ class MyAlerterFileSystem extends FileSystem{
         }
     }
     
-    currentDirectory(){
+    async currentDirectory(){
         log.debug("FTPSrv currentDirectory");
+        await getOrCreateEquipement(this.clientIP)
+                    .catch(e => log.error("Error when getting equipement "+e));        
         return "/";
     }
   
-    list(path) {        
+    async list(path) {        
         log.debug("FTPSrv list " + path);
+        await getOrCreateEquipement(this.clientIP)
+                    .catch(e => log.error("Error when getting equipement "+e));                
         return Promise.resolve([]);
     }
 
-    chdir(path){        
+    async chdir(path){        
         log.debug("FTPSrv chdir " + path);
         if (path === undefined || path === ""){
             this.current_dir = "/";
@@ -326,6 +330,10 @@ class MyAlerterFileSystem extends FileSystem{
         if (!this.current_dir.startsWith("/")){
             this.current_dir = "/" + this.current_dir;
         }
+
+        await getOrCreateEquipement(this.clientIP)
+        .catch(e => log.error("Error when getting equipement "+e));        
+
         return Promise.resolve(this.current_dir);
     }
 
@@ -428,8 +436,10 @@ class MyAlerterFileSystem extends FileSystem{
         log.debug("FTPSrv delete "+path);
     }
 
-    mkdir(path){                
+    async mkdir(path){                
         log.debug("FTPSrv mkdir "+path);        
+        await getOrCreateEquipement(this.clientIP)
+                    .catch(e => log.error("Error when getting equipement "+e));        
     }
 
     rename(from, to){           

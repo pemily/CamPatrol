@@ -5,6 +5,11 @@
 >
 >If there is no information for an update, that means it's related only on a documentation, translation or text update.
 
+22/10/2022
+==
+- Improve the equipment creation (just after the first FTP connection).
+
+
 25/09/2022
 ==
 
