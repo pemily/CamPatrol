@@ -69,75 +69,85 @@ class camPatrol extends eqLogic {
     }    
 
     return $return;
-}
-
-
-public static function deamon_start($_debug = false) {
-  $dependancy_info = self::dependancy_info();
-  if ($dependancy_info['state' != 'ok']) {
-    log::add(__CLASS__, 'error', __("Veuillez vérifier les dépendances", __FILE__));
-    return;
-  }
-	
-  if (! jeedom::isCapable('sudo')) {		
-    log::add(__CLASS__, 'error',__("Erreur : Veuillez donner les droits sudo à Jeedom", __FILE__));
-    return;
   }
 
-  self::deamon_stop();
+
+  public static function deamon_start($_debug = false) {
+    $dependancy_info = self::dependancy_info();
+    if ($dependancy_info['state' != 'ok']) {
+      log::add(__CLASS__, 'error', __("Veuillez vérifier les dépendances", __FILE__));
+      return;
+    }
     
-  log::add(__CLASS__, 'info', __('Démarrage du serveur FTP', __FILE__));
+    if (! jeedom::isCapable('sudo')) {		
+      log::add(__CLASS__, 'error',__("Erreur : Veuillez donner les droits sudo à Jeedom", __FILE__));
+      return;
+    }
 
-  $deamon_info = self::deamon_info();
-  if ($deamon_info['launchable'] != 'ok') {
-    log::add(__CLASS__, 'error', __("Veuillez vérifier la configuration", __FILE__));
-    return;
+    self::deamon_stop();
+      
+    log::add(__CLASS__, 'info', __('Démarrage du serveur FTP', __FILE__));
+
+    $deamon_info = self::deamon_info();
+    if ($deamon_info['launchable'] != 'ok') {
+      log::add(__CLASS__, 'error', __("Veuillez vérifier la configuration", __FILE__));
+      return;
+    }
+
+    $pluginId = __CLASS__;
+    $apiKey = config::byKey('api', $pluginId);   
+    if ($apiKey == ''){
+      log::add(__CLASS__, 'error', __("la clé api n'a pas pu être récupéré", __FILE__));
+      return;
+    }
+
+    // log node version
+    shell_exec(system::getCmdSudo() . 'echo "node version:" >> ' . log::getPathToLog(__CLASS__) . ' 2>&1 &');
+    shell_exec(system::getCmdSudo() . 'node -v >> ' . log::getPathToLog(__CLASS__) . ' 2>&1 &');
+
+    $user = config::byKey('server_username', $pluginId); 
+    $pswd = config::byKey('server_password', $pluginId); 
+    $port = config::byKey('server_port', $pluginId); 
+    $ip = config::byKey('server_ip', $pluginId);  
+
+    $cmd = cleanPath('node ' . __DIR__ . '/../../resources/campatrold/server.js');
+    $cmd .= ' --port=' . $port;
+    $cmd .= ' --user=' . $user;
+    $cmd .= ' --pwd=' . $pswd;
+    $cmd .= ' --ip=' . $ip;
+    $cmd .= ' --pluginId=' . $pluginId;
+    $cmd .= ' --apikey=' . $apiKey;  
+    $cmd .= ' --pidFile=' . jeedom::getTmpFolder(__CLASS__) . '/daemon.pid';
+    $cmd .= ' --logLevel=' . log::convertLogLevel(log::getLogLevel(__CLASS__));    
+    $cmd .= ' --alertsDir=' . cleanPath(__DIR__ . '/../../data/alerts');
+    log::add(__CLASS__, 'debug', __("Commande lancée: ", __FILE__) . $cmd);
+
+    shell_exec(system::getCmdSudo() . $cmd . ' >> ' . log::getPathToLog(__CLASS__) . ' 2>&1 &');
+    log::add(__CLASS__, 'info', __("Démarrage du serveur FTP effectué", __FILE__));
+
+    sleep(5);
   }
 
-  $pluginId = __CLASS__;
-  $apiKey = config::byKey('api', $pluginId);   
-  if ($apiKey == ''){
-    log::add(__CLASS__, 'error', __("la clé api n'a pas pu être récupéré", __FILE__));
-    return;
+  public static function deamon_stop() {
+    log::add(__CLASS__, 'info',  __("Stop le FTP Serveur", __FILE__));
+    $deamon_info = self::deamon_info();
+    $pid_file = jeedom::getTmpFolder(__CLASS__) . '/daemon.pid';  
+    if (file_exists($pid_file)) {
+      $pid = intval(trim(file_get_contents($pid_file)));
+      system::kill($pid);
+    }
+    sleep(2);
   }
 
-  // log node version
-  shell_exec(system::getCmdSudo() . 'echo "node version:" >> ' . log::getPathToLog(__CLASS__) . ' 2>&1 &');
-  shell_exec(system::getCmdSudo() . 'node -v >> ' . log::getPathToLog(__CLASS__) . ' 2>&1 &');
-
-  $user = config::byKey('server_username', $pluginId); 
-  $pswd = config::byKey('server_password', $pluginId); 
-  $port = config::byKey('server_port', $pluginId); 
-  $ip = config::byKey('server_ip', $pluginId);  
-
-  $cmd = 'node ' . __DIR__ . '/../../resources/campatrold/server.js';
-  $cmd .= ' --port=' . $port;
-  $cmd .= ' --user=' . $user;
-  $cmd .= ' --pwd=' . $pswd;
-  $cmd .= ' --ip=' . $ip;
-  $cmd .= ' --pluginId=' . $pluginId;
-  $cmd .= ' --apikey=' . $apiKey;  
-  $cmd .= ' --pidFile=' . jeedom::getTmpFolder(__CLASS__) . '/daemon.pid';
-  $cmd .= ' --logLevel=' . log::convertLogLevel(log::getLogLevel(__CLASS__));    
-  log::add(__CLASS__, 'debug', __("Commande lancée: ", __FILE__) . $cmd);
-
-  shell_exec(system::getCmdSudo() . $cmd . ' >> ' . log::getPathToLog(__CLASS__) . ' 2>&1 &');
-  log::add(__CLASS__, 'info', __("Démarrage du serveur FTP effectué", __FILE__));
-
-  sleep(5);
-}
-
-public static function deamon_stop() {
-  log::add(__CLASS__, 'info',  __("Stop le FTP Serveur", __FILE__));
-  $deamon_info = self::deamon_info();
-  $pid_file = jeedom::getTmpFolder(__CLASS__) . '/daemon.pid';  
-  if (file_exists($pid_file)) {
-    $pid = intval(trim(file_get_contents($pid_file)));
-    system::kill($pid);
+  public function preRemove() {
+    // on va supprimer un equipement        
+    $filesDir = jeedom::getTmpFolder(__CLASS__) . '/alerts/' .  $this->getLogicalId();
+    log::add(__CLASS__, 'info',  __("Nettoyage du répertoire", __FILE__) . " ". $filesDir);
+    if (file_exists($filesDir)) {
+      rrmdir($filesDir);
+    }    
+    log::add(__CLASS__, 'info',  __("Fin du Nettoyage", __FILE__) . " " . $filesDir);    
   }
-  sleep(2);
-}
-
 }
 
 class camPatrolCmd extends cmd {

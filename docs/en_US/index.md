@@ -116,6 +116,8 @@ After its creation, you can rename your equipment and change its usual Jeedom pa
 
 To no overload Jeedom, in case a camera send a lot of alerts, there is a protection with a minimal delay between 2 alerts. With 60 seconds by default, but you can change it at your convenience.
 
+You can keep the image/video from your camera for a configurable delay. In this case, the "alert" command will contain the camera file path. If you don't use this file in a scenario, you can set the parameter "At next alert, delete files if older than" to 0 (The default is 40 seconds).
+
 ![Jeedom Equipement Config](../images/en_JeedomEquipmentConfig.png)
 
 The equipment provide only one information command. This information will contain the directory and the filename that your camera sent to the Jeedom FTP Server.
@@ -127,7 +129,11 @@ Create a scenario on a detection
 
 To execute an action on a camera alert, you can create a scénario and select the command of your new equipment in the **Event** field.
 
-![Jeedom Command](../images/en_ScenarioJeedom.png)
+![Jeedom Scenario Config](../images/en_ScenarioJeedom.png)
 
 If you have multiple cameras, you can add them in the trigger list, 
 Si vous avez plusieurs caméras, vous pouvez les ajouter dans la liste des déclencheurs, then in the scenario you can distinguish them with a If/Then/Else block. The value to put in the If is: trigger(#[Maison][Camera Parking][Alerte]#)
+
+Example to send a notification through the Telegram plugin, with multiples camera (Parking + Home)
+
+![Jeedom Scenario Action](../images/en_ScenarioJeedomAction.png)

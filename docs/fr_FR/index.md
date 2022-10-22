@@ -116,6 +116,8 @@ Après avoir été créé, vous pouvez renomer le nom de l'équipement et lui ch
 
 Pour ne pas surcharger Jeedom, si une caméra se met a envoyer beaucoup d'alertes, il y a une protection avec un temps minimal entre 2 alertes. Par défaut à 60 secondes, mais vous pouvez le changer à votre convenance.
 
+Vous pouvez conserver l'image/la vidéo venant de votre caméra pendant un certains temps. Dans ce cas, la commande "alert" contiendra le chemin du fichier venant de la caméra. Si vous n'utilisez pas le fichier venant de la caméra dans un scénario, vous pouvez mettre le paramètre "A l'alerte suivante, supprimer les fichiers si plus vieux de" à 0 (le défaut est 40 secondes).
+
 ![Jeedom Equipement Config](../images/fr_JeedomEquipmentConfig.png)
 
 L'équipement fournit une seule commande de type information. Cette information contiendra le repertoire et le nom du fichier que votre caméra a envoyé au serveur FTP de jeedom.
@@ -128,6 +130,10 @@ Création d'un scénario sur détection
 
 Pour executer une action sur une alerte de votre caméra, vous pouvez créer un scénario et sélectionnez dans le champ **Evénement** la commande de votre nouvel équipement.
 
-![Jeedom Command](../images/fr_ScenarioJeedom.png)
+![Jeedom Scenario Config](../images/fr_ScenarioJeedom.png)
 
 Si vous avez plusieurs caméras, vous pouvez les ajouter dans la liste des déclencheurs, puis dans le scénario vous pouvez les distinguer avec un bloc Si/Alors/Sinon et la valeur dans le Si est: trigger(#[Maison][Camera Parking][Alerte]#)
+
+Exemple pour un envoie d'une notification via le plugin Telegram, et plusieurs caméra (Parking + Maison)
+
+![Jeedom Scenario Action](../images/fr_ScenarioJeedomAction.png)

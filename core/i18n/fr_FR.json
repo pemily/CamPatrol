@@ -33,7 +33,7 @@
         "Ajouter": "Ajouter",
         "Ajouter une commande": "Ajouter une commande",
         "Aucun": "Aucun",
-        "Aucun équipement CamPatrouille trouvé, cliquer sur \"Ajouter\" pour commencer": "Aucun équipement CamPatrouille trouvé, cliquer sur \"Ajouter\" pour commencer",
+        "Aucun équipement CamPatrouille trouvé, cliquer sur \"Ajouter\" pour commencer": "Aucun équipement CamPatrouille trouvé, cliquer sur \"Synchronisation\" pour vérifier",
         "Catégorie": "Catégorie",
         "Commandes": "Commandes",
         "Configuration": "Configuration",
@@ -47,6 +47,8 @@
         "IP": "IP",
         "Informations": "Informations",
         "Temps minimal entre 2 alertes": "Temps minimal entre 2 alertes",
+        "A l'alerte suivante, supprimer les fichiers si plus vieux de": "A l'alerte suivante, supprimer les fichiers si plus vieux de",        
+        "(Si 0 alors pas de stockage)": "(Si 0 alors pas de stockage)",
         "Mes équipements": "Mes équipements",
         "Nom": "Nom",
         "Nom de l'équipement": "Nom de l'équipement",
@@ -59,7 +61,9 @@
         "Supprimer": "Supprimer",
         "Synchronisation": "Synchronisation",
         "Type": "Type",
-        "Visible": "Visible"
+        "Visible": "Visible",
+        "Nettoyage du répertoire": "Nettoyage du répertoire",
+        "Fin du Nettoyage": "Fin du Nettoyage"
     },
     "plugins\/camPatrol\/plugin_info\/install.php": {
         "La clé api ne peut pas être générée": "La clé api ne peut pas être générée"
