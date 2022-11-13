@@ -5,6 +5,11 @@
 >
 >S'il n'y a pas d'information sur la mise à jour, c'est que celle-ci concerne uniquement de la mise à jour de documentation, de traduction ou de texte.
 
+13/11/2022
+==
+- Encode les noms de fichiers recu, pour corriger des problèmes lors de l'envoie de l'image/vidéo via des plugins
+  
+
 22/10/2022
 ==
 - Améliore la création de l'équipement (juste après la 1ère connexion FTP).
