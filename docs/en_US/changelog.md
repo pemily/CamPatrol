@@ -5,6 +5,11 @@
 >
 >If there is no information for an update, that means it's related only on a documentation, translation or text update.
 
+13/11/2022
+==
+- Encode received filenames, to fix problems when sending images/videos through some plugins
+  
+
 22/10/2022
 ==
 - Improve the equipment creation (just after the first FTP connection).

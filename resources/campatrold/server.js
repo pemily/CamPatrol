@@ -355,6 +355,12 @@ class MyAlerterFileSystem extends FileSystem{
     async write(fileName){        
         log.info("Received new file " + this.current_dir + fileName + " from ip=" + this.clientIP);              
 
+        var fileNameFormatted = fileName.replace(/[ ]/g,"_");        
+        fileNameFormatted = encodeURIComponent(fileNameFormatted);
+        if (fileName != fileNameFormatted){
+            log.info("file name formatted is: " + fileNameFormatted);
+        }
+
         // if we already have the interval time for this client IP
         // we can check and avoir a call to the getOrCreateEquipment        
         if (this.isTooEarly(ip2IntervalTime[this.clientIP])){            
@@ -381,7 +387,7 @@ class MyAlerterFileSystem extends FileSystem{
             if (equip.configuration?.filesMaxAge !== undefined && equip.configuration?.filesMaxAge > 0){
                 log.debug("File needs to be stored and remove files oldest than "+equip.configuration?.filesMaxAge+" seconds");                
 
-                var filePath = outDir+fileName;
+                var filePath = outDir+fileNameFormatted;
                 
                 fs.mkdirSync(outDir, { recursive: true });
                 const writeStream = this.writeTo(filePath);
@@ -405,7 +411,7 @@ class MyAlerterFileSystem extends FileSystem{
             }
             else {
                 log.debug("No file to store");
-                this.updateAlert(equip.id, this.current_dir + fileName);                
+                this.updateAlert(equip.id, this.current_dir + fileNameFormatted);                
                 this.deleteOldFiles(outDir, 0);
                 return this.noOpWritable();
             }
