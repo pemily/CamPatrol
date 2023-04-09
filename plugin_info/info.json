@@ -2,7 +2,7 @@
 	"id" : "camPatrol",
 	"name" : "CamPatrol",
 	"description" : {
-		"fr_FR": "Ce plugin permet de recevoir les alertes de vos caméras.<br>Beaucoup de caméras incluent une détection de mouvement, humaine ou de son. Le but de se plugin est de s'appuyer sur cette détection et d'être automatiquement notifié dans Jeedom lorsque la caméra detecte quelque chose.",
+		"fr_FR": "Ce plugin permet de recevoir les alertes de vos caméras.<br>Beaucoup de caméras incluent une détection de mouvement, humaine ou de son. Le but de ce plugin est de s'appuyer sur cette détection et d'être automatiquement notifié dans Jeedom lorsque la caméra detecte quelque chose.",
 		"en_US": "This plugin is able to receive alerts from your cameras.<br>A lot of camera owns a motion/human/sound detector. The goal of this plugin is to use this detector and be automatically notified in Jeedom when the camera detects something."
 	},
 	"licence" : "AGPL",
