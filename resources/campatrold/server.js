@@ -190,16 +190,19 @@ function getEquipement(clientIP){
         if (reject === undefined){
             log.debug("Search equipment with IP: "+clientIP);            
             var eqFound = undefined;
-            JSON.parse(response).result.forEach(eq => { 
-                if (eq.logicalId === clientIP){
-                    log.debug("Equipment found! "+JSON.stringify(eq));
-                    eqFound =eq;                    
-                }
-            });            
-            return eqFound;
+            var responseParsed = JSON.parse(response);
+            if (responseParsed !== undefined && responseParsed.result !== undefined){
+                responseParsed.result.forEach(eq => { 
+                    if (eq.logicalId === clientIP){
+                        log.debug("Equipment found! "+JSON.stringify(eq));
+                        eqFound =eq;                    
+                    }
+                });            
+                return eqFound;
+            }
         }
         
-        log.debug("No equipment found");
+        log.debug("No equipment found. Response: "+response+" Reject: "+reject);
         return undefined;
     });
 }
@@ -470,7 +473,7 @@ class MyAlerterFileSystem extends FileSystem{
     }
   
     writeTo(file) {
-        log.debug("Writting file to: "+file+" with fs: "+fs);
+        log.debug("Writting file to: "+file);
         return fs.createWriteStream(file);
     }
 
