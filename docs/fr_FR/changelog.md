@@ -7,7 +7,7 @@
 
 14/04/2023
 ==
-- Exclus les images et vidéos d'alertes lors de la création des sauvegardes Jeedom
+- Exclus les images et vidéos d'alertes lors de la création des sauvegardes Jeedom. (Version minimum de Jeedom necessaire: v4.3.15)
 
 
 13/11/2022

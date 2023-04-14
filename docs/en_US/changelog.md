@@ -7,7 +7,7 @@
 
 14/04/2023
 ==
-- Exclude the alerts images and videos when creating a Jeedom backup
+- Exclude the alerts images and videos when creating a Jeedom backup. (Minmal Jeedom version required: v4.3.15)
 
 13/11/2022
 ==
