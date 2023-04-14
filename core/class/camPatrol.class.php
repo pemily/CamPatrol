@@ -138,6 +138,10 @@ class camPatrol extends eqLogic {
     }
     sleep(2);
   }
+  
+  public static function backupExclude() {
+    return array('data/alerts');
+  }
 
   public function preRemove() {
     // on va supprimer un equipement        
